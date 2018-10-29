@@ -1,0 +1,10 @@
+<resources>
+    <string name="error_email_required">Enter your ID</string>
+    <string name="error_password_required">Enter your password</string>
+    <string name="error_incorrect_credentials">Login or Password is incorrect, please check them again</string>
+    <string name="error_backend">Server error. Try again later.</string>
+    <string name="error_cannot_download_map">Cannot download map. Please try again.</string>
+    <string name="error_unauthorized">Your session has expired. Please relogin.</string>
+    <string name="error_connection">Connection error. Please try again.</string>
+    <string name="error_timeout">Connection timeout. Please check your connection and try again</string>
+</resources>
