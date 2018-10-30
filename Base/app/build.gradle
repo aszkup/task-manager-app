@@ -27,8 +27,7 @@ dependencies {
     api "androidx.lifecycle:lifecycle-extensions:2.0.0"
     api "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
     api 'androidx.appcompat:appcompat:1.0.0'
-    api 'com.android.support.constraint:constraint-layout:1.1.3'
-
+    api 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     api 'com.github.salomonbrys.kodein:kodein:4.1.0'
     api 'com.github.salomonbrys.kodein:kodein-android:4.1.0'
 
