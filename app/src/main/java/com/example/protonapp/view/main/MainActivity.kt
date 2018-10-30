@@ -1,9 +1,10 @@
-package com.example.protonapp
+package com.example.protonapp.view.main
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.android.base.view.BaseActivity
+import com.example.protonapp.R
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
