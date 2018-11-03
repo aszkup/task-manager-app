@@ -9,19 +9,19 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.base.view.BaseFragment
 import com.example.protonapp.R
-import com.example.protonapp.viewmodel.main.TasksViewModel
+import com.example.protonapp.viewmodel.main.PendingTasksViewModel
 import kotlinx.android.synthetic.main.fragmnet_task_list.*
 
 class TaskListFragment : BaseFragment() {
 
-    private lateinit var viewModel: TasksViewModel
+    private lateinit var viewModelPending: PendingTasksViewModel
     private lateinit var tasksAdapter: TaskListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = getModel(TasksViewModel::class.java)
-        viewModel.viewState.observe(this, Observer {
+        viewModelPending = getModel(PendingTasksViewModel::class.java)
+        viewModelPending.viewState.observe(this, Observer {
         })
     }
 

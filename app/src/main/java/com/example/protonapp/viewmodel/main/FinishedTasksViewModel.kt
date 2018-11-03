@@ -5,7 +5,7 @@ import com.android.base.model.ViewState
 import com.android.base.viewmodel.BaseViewModel
 import com.example.protonapp.model.TasksViewState
 
-class TasksViewModel : BaseViewModel() {
+class FinishedTasksViewModel : BaseViewModel() {
 
     val viewState: MutableLiveData<ViewState<TasksViewState>> = MutableLiveData()
 }
