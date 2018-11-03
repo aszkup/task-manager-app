@@ -2,9 +2,16 @@ package com.example.protonapp.view.newtask
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import com.android.base.model.OperationError
+import com.android.base.utils.enums.GENERAL_MESSAGE
+import com.android.base.utils.extensions.showToast
+import com.android.base.utils.extensions.value
 import com.android.base.view.BaseActivity
 import com.example.protonapp.R
+import com.example.protonapp.model.CreateTaskViewState
+import com.example.protonapp.repository.task.Task
 import com.example.protonapp.viewmodel.newtask.CreateTaskViewModel
+import kotlinx.android.synthetic.main.activity_task_create.*
 
 class CreateTaskActivity : BaseActivity() {
 
@@ -16,6 +23,44 @@ class CreateTaskActivity : BaseActivity() {
 
         viewModel = getModel(CreateTaskViewModel::class.java)
         viewModel.viewState.observe(this, Observer {
+            viewStateUpdated(it, ::onNewState, ::showInProgress, ::hideInProgress, ::showError)
         })
+        setupButtons()
+    }
+
+    private fun setupButtons() {
+        saveButton.setOnClickListener { createTask() }
+        cancelButton.setOnClickListener { finish() }
+    }
+
+    private fun onNewState(viewState: CreateTaskViewState) {
+        viewState.taskStored?.let { stored ->
+            if (stored) {
+                showToast(application, getString(R.string.task_stored), GENERAL_MESSAGE)
+                finish()
+                return
+            }
+        }
+        viewState.task?.let {
+            nameInput.setText(it.name)
+            descriptionInput.setText(it.description)
+        }
+    }
+
+    private fun showInProgress() {
+
+    }
+
+    private fun hideInProgress() {
+
+    }
+
+    private fun showError(operationError: OperationError) {
+
+    }
+
+    private fun createTask() {
+        viewModel.createTask(Task(name = nameInput.value,
+                description = descriptionInput.value))
     }
 }
