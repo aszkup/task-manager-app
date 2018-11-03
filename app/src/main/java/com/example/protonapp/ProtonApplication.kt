@@ -3,6 +3,7 @@ package com.example.protonapp
 import com.android.base.BaseApplication
 import com.example.protonapp.di.repositoryModule
 import com.example.protonapp.di.viewModelModule
+import com.facebook.stetho.Stetho
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.KodeinAware
 import com.github.salomonbrys.kodein.lazy
@@ -16,6 +17,7 @@ class ProtonApplication : BaseApplication(), KodeinAware {
 
         AndroidThreeTen.init(this)
         Timber.plant(Timber.DebugTree())
+        Stetho.initializeWithDefaults(this)
     }
 
     override val kodein by Kodein.lazy {
