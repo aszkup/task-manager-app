@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import com.android.base.utils.extensions.start
 import com.android.base.view.BaseActivity
 import com.example.protonapp.R
-import com.google.android.material.snackbar.Snackbar
+import com.example.protonapp.view.newtask.CreateTaskActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -39,9 +40,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupFab() {
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        fab.setOnClickListener {
+            start<CreateTaskActivity>()
         }
     }
 
