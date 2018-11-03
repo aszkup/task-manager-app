@@ -7,6 +7,8 @@ import com.android.base.view.BaseActivity
 import com.example.protonapp.R
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
+
 
 class MainActivity : BaseActivity() {
 
@@ -15,10 +17,8 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+        setupFab()
+        setupViewPager()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -35,5 +35,17 @@ class MainActivity : BaseActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun setupFab() {
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+        }
+    }
+
+    private fun setupViewPager() {
+        viewPager.adapter = TaskListPageAdapter(emptyList(), emptyList(), supportFragmentManager)
+        tabLayout.setupWithViewPager(viewPager)
     }
 }
