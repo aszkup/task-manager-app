@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 
 class TaskListPageAdapter(
         private val fragments: List<Fragment>,
-        private val tabTitles: List<String>,
+        private val tabTitles: Array<String>,
         fragmentManager: FragmentManager
 ) : FragmentStatePagerAdapter(fragmentManager) {
 

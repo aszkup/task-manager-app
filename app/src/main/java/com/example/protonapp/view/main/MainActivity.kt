@@ -3,6 +3,7 @@ package com.example.protonapp.view.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import com.android.base.view.BaseActivity
 import com.example.protonapp.R
 import com.google.android.material.snackbar.Snackbar
@@ -45,7 +46,11 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupViewPager() {
-        viewPager.adapter = TaskListPageAdapter(emptyList(), emptyList(), supportFragmentManager)
+        val fragments = listOf<Fragment>(
+                TaskListFragment.newInstance(),
+                TaskListFragment.newInstance())
+        val tabTitles = resources.getStringArray(R.array.tab_titles)
+        viewPager.adapter = TaskListPageAdapter(fragments, tabTitles, supportFragmentManager)
         tabLayout.setupWithViewPager(viewPager)
     }
 }

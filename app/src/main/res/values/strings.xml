@@ -8,4 +8,11 @@
     <string name="cancel">Cancel</string>
     <string name="keywords">Keywords</string>
     <string name="selected_file">Selected file:</string>
+    <string name="pending_tasks">Pending</string>
+    <string name="finished_tasks">Finished</string>
+
+    <string-array name="tab_titles">
+        <item>@string/pending_tasks</item>
+        <item>@string/finished_tasks</item>
+    </string-array>
 </resources>
