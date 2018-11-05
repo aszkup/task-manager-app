@@ -2,6 +2,8 @@ package com.example.protonapp.view.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.protonapp.databinding.ItemTaskBinding
 import com.example.protonapp.repository.task.Task
@@ -9,8 +11,8 @@ import com.example.protonapp.repository.task.Task
 /**
  * Task list adapter
  */
-class TaskListAdapter(val tasks: MutableList<Task>)
-    : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
+class TaskListAdapter
+    : PagedListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -18,10 +20,9 @@ class TaskListAdapter(val tasks: MutableList<Task>)
         return TaskViewHolder(binding)
     }
 
-    override fun getItemCount() = tasks.size
-
-    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) =
-            holder.bind(tasks[position])
+    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
 
     inner class TaskViewHolder(private val binding: ItemTaskBinding)
         : RecyclerView.ViewHolder(binding.root) {
@@ -29,6 +30,17 @@ class TaskListAdapter(val tasks: MutableList<Task>)
         fun bind(task: Task) {
             binding.task = task
             binding.executePendingBindings()
+        }
+    }
+
+    private class TaskDiffCallback : DiffUtil.ItemCallback<Task>() {
+
+        override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
+            return oldItem == newItem
         }
     }
 }

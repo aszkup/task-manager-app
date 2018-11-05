@@ -22,6 +22,7 @@ class TaskListFragment : BaseFragment() {
 
         viewModelPending = getModel(PendingTasksViewModel::class.java)
         viewModelPending.viewState.observe(this, Observer {
+            tasksAdapter.submitList(it)
         })
     }
 
@@ -32,10 +33,11 @@ class TaskListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTaskList()
+        viewModelPending.getTasks()
     }
 
     private fun setupTaskList() {
-        tasksAdapter = TaskListAdapter(mutableListOf())
+        tasksAdapter = TaskListAdapter()
         recyclerView.adapter = tasksAdapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val dividerItemDecoration = DividerItemDecoration(activity, LinearLayoutManager.VERTICAL)
