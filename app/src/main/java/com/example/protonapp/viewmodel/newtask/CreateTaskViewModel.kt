@@ -21,7 +21,7 @@ class CreateTaskViewModel(
 
     fun createTask(task: Task) {
         this.task = task
-        taskRepository.insert(task)
+        taskRepository.store(task)
                 .applyIoSchedulers()
                 .doOnSubscribe { viewState.value = ViewState(status = InProgress()) }
                 .subscribe(::onTaskAdded, ::onInsertError)
