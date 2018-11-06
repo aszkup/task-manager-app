@@ -19,10 +19,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_small"
+            android:maxLength="6"
             android:text="@{task.id}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="1234" />
+            tools:text="123456789" />
+
+        <TextView
+            android:id="@+id/nameId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:text="@{task.name}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/taskId"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Task1 Task2 Task3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
