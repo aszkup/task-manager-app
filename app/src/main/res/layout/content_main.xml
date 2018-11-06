@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabMode="fixed" />
 
-    <androidx.viewpager.widget.ViewPager
+    <com.example.protonapp.view.main.LockedViewPager
         android:id="@+id/viewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
