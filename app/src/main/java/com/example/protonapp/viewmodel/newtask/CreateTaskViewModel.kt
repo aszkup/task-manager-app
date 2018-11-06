@@ -3,7 +3,6 @@ package com.example.protonapp.viewmodel.newtask
 import androidx.lifecycle.MutableLiveData
 import com.android.base.model.InProgress
 import com.android.base.model.ViewState
-import com.android.base.utils.extensions.applyIoSchedulers
 import com.android.base.viewmodel.BaseViewModel
 import com.example.protonapp.model.CreateTaskViewState
 import com.example.protonapp.repository.task.Task
@@ -22,7 +21,6 @@ class CreateTaskViewModel(
     fun createTask(task: Task) {
         this.task = task
         taskRepository.store(task)
-                .applyIoSchedulers()
                 .doOnSubscribe { viewState.value = ViewState(status = InProgress()) }
                 .subscribe(::onTaskAdded, ::onInsertError)
                 .addTo(disposables)

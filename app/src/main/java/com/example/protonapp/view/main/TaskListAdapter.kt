@@ -24,6 +24,8 @@ class TaskListAdapter
         getItem(position)?.let { holder.bind(it) }
     }
 
+    fun getItemAt(position: Int): Task? = getItem(position)
+
     inner class TaskViewHolder(private val binding: ItemTaskBinding)
         : RecyclerView.ViewHolder(binding.root) {
 

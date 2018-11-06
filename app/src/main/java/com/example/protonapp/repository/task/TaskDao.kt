@@ -1,10 +1,7 @@
 package com.example.protonapp.repository.task
 
 import androidx.paging.DataSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import io.reactivex.Flowable
 
 
@@ -19,4 +16,7 @@ interface TaskDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(task: Task)
+
+    @Delete
+    fun delete(task: Task)
 }
