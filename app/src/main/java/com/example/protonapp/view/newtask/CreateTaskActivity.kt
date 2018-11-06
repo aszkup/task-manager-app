@@ -61,6 +61,7 @@ class CreateTaskActivity : BaseActivity() {
 
     private fun createTask() {
         viewModel.createTask(Task(name = nameInput.value,
-                description = descriptionInput.value))
+                description = descriptionInput.value,
+                state = "created"))
     }
 }
