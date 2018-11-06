@@ -23,6 +23,7 @@ class TaskListFragment : BaseFragment() {
         viewModelPending = getModel(PendingTasksViewModel::class.java)
         viewModelPending.viewState.observe(this, Observer {
             tasksAdapter.submitList(it)
+            swipeLayout.isRefreshing = false
         })
     }
 
@@ -33,6 +34,7 @@ class TaskListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTaskList()
+        swipeLayout.setOnRefreshListener { viewModelPending.getTasks() }
         viewModelPending.getTasks()
     }
 
