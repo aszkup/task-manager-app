@@ -21,9 +21,9 @@ class PendingTasksViewModel(
                 .addTo(disposables)
     }
 
-    fun removeTask(task: Task) {
-        Timber.d("Remove task: $task")
-        taskRepository.remove(task)
+    fun startTask(task: Task) {
+        Timber.d("Start task: $task")
+        taskRepository.startTask(task)
                 .subscribe({ }, { Timber.e(it) })
                 .addTo(disposables)
     }

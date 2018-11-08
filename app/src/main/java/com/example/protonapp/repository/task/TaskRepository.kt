@@ -6,6 +6,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
+import org.threeten.bp.Instant
 
 class TaskRepository(
         private val tasksDao: TaskDao
@@ -23,6 +24,11 @@ class TaskRepository(
             RxPagedListBuilder(tasksDao.tasksPaged(), PAGE_SIZE)
                     .buildFlowable(BackpressureStrategy.LATEST)
                     .subscribeOn(Schedulers.io())
+
+    fun startTask(task: Task): Completable =
+            Completable.fromAction {
+                tasksDao.update(task.copy(startedAt = Instant.now()))
+            }.subscribeOn(Schedulers.io())
 
     fun remove(task: Task): Completable =
             Completable.fromAction {
