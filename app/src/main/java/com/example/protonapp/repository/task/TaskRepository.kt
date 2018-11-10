@@ -25,6 +25,16 @@ class TaskRepository(
                     .buildFlowable(BackpressureStrategy.LATEST)
                     .subscribeOn(Schedulers.io())
 
+    fun getPendingTasksPaged(): Flowable<PagedList<Task>> =
+            RxPagedListBuilder(tasksDao.pendingTasksPaged(), PAGE_SIZE)
+                    .buildFlowable(BackpressureStrategy.LATEST)
+                    .subscribeOn(Schedulers.io())
+
+    fun getFinishedTasksPaged(): Flowable<PagedList<Task>> =
+            RxPagedListBuilder(tasksDao.finishedTasksPaged(), PAGE_SIZE)
+                    .buildFlowable(BackpressureStrategy.LATEST)
+                    .subscribeOn(Schedulers.io())
+
     fun startTask(task: Task): Completable =
             Completable.fromAction {
                 tasksDao.update(task.copy(startedAt = Instant.now()))

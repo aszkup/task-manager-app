@@ -14,6 +14,12 @@ interface TaskDao {
     @Query("SELECT * FROM tasks ORDER BY startedAt DESC, createdAt DESC")
     fun tasksPaged(): DataSource.Factory<Int, Task>
 
+    @Query("SELECT * FROM tasks WHERE finishedAt IS NULL ORDER BY startedAt DESC, createdAt DESC")
+    fun pendingTasksPaged(): DataSource.Factory<Int, Task>
+
+    @Query("SELECT * FROM tasks WHERE finishedAt IS NOT NULL ORDER BY startedAt DESC, createdAt DESC")
+    fun finishedTasksPaged(): DataSource.Factory<Int, Task>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(task: Task)
 
