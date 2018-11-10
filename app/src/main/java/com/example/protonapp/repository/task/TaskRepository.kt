@@ -37,7 +37,12 @@ class TaskRepository(
 
     fun startTask(task: Task): Completable =
             Completable.fromAction {
-                tasksDao.update(task.copy(startedAt = Instant.now()))
+                tasksDao.update(task.copy(startedAt = Instant.now(), finishedAt = null))
+            }.subscribeOn(Schedulers.io())
+
+    fun finishTask(task: Task): Completable =
+            Completable.fromAction {
+                tasksDao.update(task.copy(finishedAt = Instant.now()))
             }.subscribeOn(Schedulers.io())
 
     fun remove(task: Task): Completable =

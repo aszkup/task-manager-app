@@ -56,7 +56,7 @@ class PendingTasksListFragment : BaseFragment() {
             object : SwipeToStartTaskCallback(swipeDirection) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     tasksAdapter.getItemAt(viewHolder.adapterPosition)?.let {
-                        viewModel.startTask(it)
+                        viewModel.finishTask(it)
                     }
                 }
             }

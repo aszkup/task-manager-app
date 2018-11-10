@@ -34,4 +34,11 @@ class TasksViewModel(
                 .subscribe({ }, { Timber.e(it) })
                 .addTo(disposables)
     }
+
+    fun finishTask(task: Task) {
+        Timber.d("Finish task: $task")
+        taskRepository.finishTask(task)
+                .subscribe({ }, { Timber.e(it) })
+                .addTo(disposables)
+    }
 }
