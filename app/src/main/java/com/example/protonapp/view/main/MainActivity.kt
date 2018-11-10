@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment
 import com.android.base.utils.extensions.start
 import com.android.base.view.BaseActivity
 import com.example.protonapp.R
+import com.example.protonapp.view.main.fragment.FinishedTasksListFragment
+import com.example.protonapp.view.main.fragment.PendingTasksListFragment
+import com.example.protonapp.view.main.pageadapter.TaskListPageAdapter
 import com.example.protonapp.view.newtask.CreateTaskActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -47,8 +50,8 @@ class MainActivity : BaseActivity() {
 
     private fun setupViewPager() {
         val fragments = listOf<Fragment>(
-                TaskListFragment.newInstance(),
-                TaskListFragment.newInstance())
+                PendingTasksListFragment.newInstance(),
+                FinishedTasksListFragment.newInstance())
         val tabTitles = resources.getStringArray(R.array.tab_titles)
         viewPager.adapter = TaskListPageAdapter(fragments, tabTitles, supportFragmentManager)
         tabLayout.setupWithViewPager(viewPager)

@@ -1,4 +1,4 @@
-package com.example.protonapp.view.main
+package com.example.protonapp.view.main.pageadapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

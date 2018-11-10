@@ -2,8 +2,7 @@ package com.example.protonapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.protonapp.viewmodel.main.FinishedTasksViewModel
-import com.example.protonapp.viewmodel.main.PendingTasksViewModel
+import com.example.protonapp.viewmodel.main.TasksViewModel
 import com.example.protonapp.viewmodel.newtask.CreateTaskViewModel
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.KodeinInjected
@@ -22,10 +21,8 @@ class ViewModelFactory(private val kodein: Kodein)
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
             with(modelClass) {
                 when {
-                    isAssignableFrom(PendingTasksViewModel::class.java) ->
-                        PendingTasksViewModel(kodein.instance())
-                    isAssignableFrom(FinishedTasksViewModel::class.java) ->
-                        FinishedTasksViewModel(kodein.instance())
+                    isAssignableFrom(TasksViewModel::class.java) ->
+                        TasksViewModel(kodein.instance())
                     isAssignableFrom(CreateTaskViewModel::class.java) ->
                         CreateTaskViewModel(kodein.instance())
                     else ->

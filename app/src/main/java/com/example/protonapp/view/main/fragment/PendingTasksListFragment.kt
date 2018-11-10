@@ -1,4 +1,4 @@
-package com.example.protonapp.view.main
+package com.example.protonapp.view.main.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,20 +11,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.base.view.BaseFragment
 import com.example.protonapp.R
+import com.example.protonapp.view.main.TaskListAdapter
 import com.example.protonapp.view.main.swipecallback.SwipeToStartTaskCallback
-import com.example.protonapp.viewmodel.main.PendingTasksViewModel
+import com.example.protonapp.viewmodel.main.TasksViewModel
 import kotlinx.android.synthetic.main.fragmnet_task_list.*
 
-class TaskListFragment : BaseFragment() {
+class PendingTasksListFragment : BaseFragment() {
 
-    private lateinit var viewModelPending: PendingTasksViewModel
+    private lateinit var viewModel: TasksViewModel
     private lateinit var tasksAdapter: TaskListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModelPending = getModel(PendingTasksViewModel::class.java)
-        viewModelPending.viewState.observe(this, Observer {
+        viewModel = getModel(TasksViewModel::class.java)
+        viewModel.viewState.observe(this, Observer {
             tasksAdapter.submitList(it)
             swipeLayout.isRefreshing = false
         })
@@ -37,8 +38,8 @@ class TaskListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTaskList()
-        swipeLayout.setOnRefreshListener { viewModelPending.getPendingTasks() }
-        viewModelPending.getPendingTasks()
+        swipeLayout.setOnRefreshListener { viewModel.getPendingTasks() }
+        viewModel.getPendingTasks()
     }
 
     private fun setupTaskList() {
@@ -55,12 +56,12 @@ class TaskListFragment : BaseFragment() {
             object : SwipeToStartTaskCallback(swipeDirection) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     tasksAdapter.getItemAt(viewHolder.adapterPosition)?.let {
-                        viewModelPending.startTask(it)
+                        viewModel.startTask(it)
                     }
                 }
             }
 
     companion object {
-        fun newInstance() = TaskListFragment()
+        fun newInstance() = PendingTasksListFragment()
     }
 }

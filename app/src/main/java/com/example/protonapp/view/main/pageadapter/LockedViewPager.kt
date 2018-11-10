@@ -1,4 +1,4 @@
-package com.example.protonapp.view.main
+package com.example.protonapp.view.main.pageadapter
 
 import android.annotation.SuppressLint
 import android.content.Context
