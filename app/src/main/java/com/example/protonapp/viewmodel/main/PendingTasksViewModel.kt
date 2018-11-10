@@ -14,9 +14,9 @@ class PendingTasksViewModel(
 
     val viewState: MutableLiveData<PagedList<Task>> = MutableLiveData()
 
-    fun getTasks() {
-        Timber.d("Get tasks")
-        taskRepository.getTasksPaged()
+    fun getPendingTasks() {
+        Timber.d("Get pending tasks")
+        taskRepository.getPendingTasksPaged()
                 .subscribe({ viewState.value = it }, { Timber.e(it) })
                 .addTo(disposables)
     }

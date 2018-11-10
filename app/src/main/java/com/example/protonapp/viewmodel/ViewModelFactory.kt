@@ -25,7 +25,7 @@ class ViewModelFactory(private val kodein: Kodein)
                     isAssignableFrom(PendingTasksViewModel::class.java) ->
                         PendingTasksViewModel(kodein.instance())
                     isAssignableFrom(FinishedTasksViewModel::class.java) ->
-                        FinishedTasksViewModel()
+                        FinishedTasksViewModel(kodein.instance())
                     isAssignableFrom(CreateTaskViewModel::class.java) ->
                         CreateTaskViewModel(kodein.instance())
                     else ->

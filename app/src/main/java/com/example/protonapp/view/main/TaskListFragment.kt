@@ -37,8 +37,8 @@ class TaskListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTaskList()
-        swipeLayout.setOnRefreshListener { viewModelPending.getTasks() }
-        viewModelPending.getTasks()
+        swipeLayout.setOnRefreshListener { viewModelPending.getPendingTasks() }
+        viewModelPending.getPendingTasks()
     }
 
     private fun setupTaskList() {
