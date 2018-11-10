@@ -1,5 +1,6 @@
 package com.example.protonapp.viewmodel.newtask
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.android.base.model.InProgress
 import com.android.base.model.ViewState
@@ -15,15 +16,20 @@ class CreateTaskViewModel(
 ) : BaseViewModel() {
 
     private var task: Task? = null
+    private var uri: Uri? = null
 
     val viewState: MutableLiveData<ViewState<CreateTaskViewState>> = MutableLiveData()
 
     fun createTask(task: Task) {
         this.task = task
-        taskRepository.store(task)
+        taskRepository.store(task.copy(fileUri = uri.toString()))
                 .doOnSubscribe { viewState.value = ViewState(status = InProgress()) }
                 .subscribe(::onTaskAdded, ::onInsertError)
                 .addTo(disposables)
+    }
+
+    fun storeSelectedFileUri(fileUri: Uri) {
+        uri = fileUri
     }
 
     private fun onTaskAdded() {
