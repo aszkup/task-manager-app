@@ -2,14 +2,19 @@ package com.example.protonapp.viewmodel.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.android.base.viewmodel.BaseViewModel
 import com.example.protonapp.repository.task.Task
 import com.example.protonapp.repository.task.TaskRepository
+import com.example.protonapp.repository.worker.UploadFileWorker
 import io.reactivex.rxkotlin.addTo
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class TasksViewModel(
-        private val taskRepository: TaskRepository
+        private val taskRepository: TaskRepository,
+        private val workManager: WorkManager
 ) : BaseViewModel() {
 
     val viewState: MutableLiveData<PagedList<Task>> = MutableLiveData()
@@ -28,10 +33,11 @@ class TasksViewModel(
                 .addTo(disposables)
     }
 
-    fun startTask(task: Task) {
+    fun startTask(task: Task, delay: Int) {
+        Timber.i("Start task: ${task.name} with delay: $delay")
         Timber.d("Start task: $task")
         taskRepository.startTask(task)
-                .subscribe({ }, { Timber.e(it) })
+                .subscribe({ startWorker(delay) }, { Timber.e(it) })
                 .addTo(disposables)
     }
 
@@ -40,5 +46,12 @@ class TasksViewModel(
         taskRepository.finishTask(task)
                 .subscribe({ }, { Timber.e(it) })
                 .addTo(disposables)
+    }
+
+    private fun startWorker(delay: Int) {
+        val work = OneTimeWorkRequest.Builder(UploadFileWorker::class.java)
+                .setInitialDelay(delay.toLong(), TimeUnit.SECONDS)
+                .build()
+        workManager.enqueue(work)
     }
 }

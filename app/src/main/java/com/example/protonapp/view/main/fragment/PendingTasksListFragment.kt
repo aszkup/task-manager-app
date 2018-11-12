@@ -48,20 +48,25 @@ class PendingTasksListFragment : BaseFragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val dividerItemDecoration = DividerItemDecoration(activity, LinearLayoutManager.VERTICAL)
         recyclerView.addItemDecoration(dividerItemDecoration)
-        val itemTouchHelper = ItemTouchHelper(getSwipeHandler(ItemTouchHelper.LEFT))
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+
+        val leftSwipe = ItemTouchHelper(getSwipeHandler(ItemTouchHelper.LEFT, START_TASK_DELAY))
+        leftSwipe.attachToRecyclerView(recyclerView)
+        val rightSwipe = ItemTouchHelper(getSwipeHandler(ItemTouchHelper.RIGHT))
+        rightSwipe.attachToRecyclerView(recyclerView)
     }
 
-    private fun getSwipeHandler(swipeDirection: Int) =
+    private fun getSwipeHandler(swipeDirection: Int, delay: Int = 0) =
             object : SwipeToStartTaskCallback(swipeDirection) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     tasksAdapter.getItemAt(viewHolder.adapterPosition)?.let {
-                        viewModel.finishTask(it)
+                        viewModel.startTask(it, delay)
                     }
                 }
             }
 
     companion object {
+        const val START_TASK_DELAY = 60
+
         fun newInstance() = PendingTasksListFragment()
     }
 }

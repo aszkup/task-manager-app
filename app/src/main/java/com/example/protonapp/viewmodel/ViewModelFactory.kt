@@ -22,7 +22,7 @@ class ViewModelFactory(private val kodein: Kodein)
             with(modelClass) {
                 when {
                     isAssignableFrom(TasksViewModel::class.java) ->
-                        TasksViewModel(kodein.instance())
+                        TasksViewModel(kodein.instance(), kodein.instance())
                     isAssignableFrom(CreateTaskViewModel::class.java) ->
                         CreateTaskViewModel(kodein.instance())
                     else ->

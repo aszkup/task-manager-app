@@ -48,15 +48,16 @@ class FinishedTasksListFragment : BaseFragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val dividerItemDecoration = DividerItemDecoration(activity, LinearLayoutManager.VERTICAL)
         recyclerView.addItemDecoration(dividerItemDecoration)
-        val itemTouchHelper = ItemTouchHelper(getSwipeHandler(ItemTouchHelper.LEFT))
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+
+        val leftSwipe = ItemTouchHelper(getSwipeHandler(ItemTouchHelper.LEFT))
+        leftSwipe.attachToRecyclerView(recyclerView)
     }
 
-    private fun getSwipeHandler(swipeDirection: Int) =
+    private fun getSwipeHandler(swipeDirection: Int, delay: Int = 0) =
             object : SwipeToStartTaskCallback(swipeDirection) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     tasksAdapter.getItemAt(viewHolder.adapterPosition)?.let {
-                        viewModel.startTask(it)
+                        viewModel.startTask(it, delay)
                     }
                 }
             }
