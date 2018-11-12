@@ -5,6 +5,7 @@ import androidx.paging.RxPagedListBuilder
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
 
@@ -16,6 +17,10 @@ class TaskRepository(
             Completable.fromAction {
                 tasksDao.insert(task)
             }.subscribeOn(Schedulers.io())
+
+    fun getTask(id: String): Maybe<Task> =
+            tasksDao.taskWithId(id)
+                    .subscribeOn(Schedulers.io())
 
     fun getTasks() = tasksDao.tasks()
             .subscribeOn(Schedulers.io())

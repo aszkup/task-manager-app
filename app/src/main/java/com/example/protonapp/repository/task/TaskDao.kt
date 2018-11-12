@@ -3,10 +3,14 @@ package com.example.protonapp.repository.task
 import androidx.paging.DataSource
 import androidx.room.*
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 
 @Dao
 interface TaskDao {
+
+    @Query("SELECT * FROM tasks WHERE taskid is :id")
+    fun taskWithId(id: String): Maybe<Task>
 
     @Query("SELECT * FROM tasks")
     fun tasks(): Flowable<Task>
