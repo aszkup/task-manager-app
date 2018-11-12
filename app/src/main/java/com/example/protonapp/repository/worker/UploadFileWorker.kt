@@ -23,6 +23,14 @@ class UploadFileWorker(
         injector.inject((applicationContext as KodeinAware).kodein)
         Timber.i("Worker ${this::class.java.simpleName} started.")
 
-        return ListenableWorker.Result.SUCCESS
+        val taskId = inputData.getString(TASK_ID)
+        taskId?.let {
+            return ListenableWorker.Result.SUCCESS
+        }
+        return ListenableWorker.Result.FAILURE
+    }
+
+    companion object {
+        const val TASK_ID = "task_id"
     }
 }
