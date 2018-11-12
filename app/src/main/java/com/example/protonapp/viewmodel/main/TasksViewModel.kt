@@ -2,6 +2,8 @@ package com.example.protonapp.viewmodel.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.android.base.viewmodel.BaseViewModel
@@ -49,9 +51,14 @@ class TasksViewModel(
     }
 
     private fun startWorker(delay: Int) {
-        val work = OneTimeWorkRequest.Builder(UploadFileWorker::class.java)
-                .setInitialDelay(delay.toLong(), TimeUnit.SECONDS)
-                .build()
+        val constraints = Constraints.Builder().apply {
+            setRequiresCharging(false)
+            setRequiredNetworkType(NetworkType.CONNECTED)
+        }.build()
+        val work = OneTimeWorkRequest.Builder(UploadFileWorker::class.java).apply {
+            setInitialDelay(delay.toLong(), TimeUnit.SECONDS)
+            setConstraints(constraints)
+        }.build()
         workManager.enqueue(work)
     }
 }
