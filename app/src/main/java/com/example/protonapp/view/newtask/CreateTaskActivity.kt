@@ -80,7 +80,7 @@ class CreateTaskActivity : BaseActivity() {
     }
 
     private fun getFile() {
-        val intent = Intent(Intent.ACTION_PICK).apply {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             type = FILE_TYPE
         }
         startActivityForResult(intent, 0)
