@@ -1,6 +1,7 @@
 package com.example.protonapp
 
 import com.android.base.BaseApplication
+import com.example.protonapp.di.dropboxModule
 import com.example.protonapp.di.repositoryModule
 import com.example.protonapp.di.viewModelModule
 import com.example.protonapp.utils.ReleaseTree
@@ -25,5 +26,6 @@ class ProtonApplication : BaseApplication(), KodeinAware {
         extend(super.kodein)
         import(viewModelModule)
         import(repositoryModule)
+        import(dropboxModule)
     }
 }
