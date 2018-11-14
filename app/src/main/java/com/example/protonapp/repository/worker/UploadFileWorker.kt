@@ -4,25 +4,24 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.example.protonapp.ProtonApplication
 import com.example.protonapp.repository.task.TaskRepository
-import com.github.salomonbrys.kodein.KodeinAware
-import com.github.salomonbrys.kodein.KodeinInjector
-import com.github.salomonbrys.kodein.instance
 import io.reactivex.disposables.Disposable
+import org.kodein.di.KodeinAware
+import org.kodein.di.generic.instance
 import timber.log.Timber
 
 class UploadFileWorker(
         context: Context,
         workerParameters: WorkerParameters
-) : Worker(context, workerParameters) {
+) : Worker(context, workerParameters), KodeinAware {
 
-    private val injector = KodeinInjector()
+    override val kodein by lazy { (applicationContext as ProtonApplication).kodein }
 
-    private val repository: TaskRepository by injector.instance()
+    private val repository: TaskRepository by instance()
     private var getTaskDisposable: Disposable? = null
 
     override fun doWork(): Result {
-        injector.inject((applicationContext as KodeinAware).kodein)
         Timber.i("Worker ${this::class.java.simpleName} started.")
 
         inputData.getString(TASK_ID)?.let { taskId ->

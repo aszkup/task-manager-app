@@ -4,15 +4,15 @@ import androidx.work.WorkManager
 import com.example.protonapp.repository.AppDatabase
 import com.example.protonapp.repository.task.TaskDao
 import com.example.protonapp.repository.task.TaskRepository
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.singleton
+import org.kodein.di.Kodein
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.singleton
 
 val repositoryModule = Kodein.Module {
-    bind<AppDatabase>() with singleton { AppDatabase.getInstance(kodein.instance()) }
-    bind<TaskDao>() with singleton { (kodein.instance() as AppDatabase).taskDao() }
-    bind<TaskRepository>() with singleton { TaskRepository(kodein.instance()) }
+    bind<AppDatabase>() with singleton { AppDatabase.getInstance(instance()) }
+    bind<TaskDao>() with singleton { (instance() as AppDatabase).taskDao() }
+    bind<TaskRepository>() with singleton { TaskRepository(instance()) }
 
     bind<WorkManager>() with singleton { WorkManager.getInstance() }
 }

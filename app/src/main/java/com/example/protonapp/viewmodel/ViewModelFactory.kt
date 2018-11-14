@@ -2,29 +2,31 @@ package com.example.protonapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.WorkManager
+import com.example.protonapp.repository.task.TaskRepository
 import com.example.protonapp.viewmodel.main.TasksViewModel
 import com.example.protonapp.viewmodel.newtask.CreateTaskViewModel
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.KodeinInjected
-import com.github.salomonbrys.kodein.KodeinInjector
-import com.github.salomonbrys.kodein.instance
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.generic.instance
 
 /**
  * View model factory
  */
-class ViewModelFactory(private val kodein: Kodein)
-    : ViewModelProvider.NewInstanceFactory(), KodeinInjected {
+class ViewModelFactory(override val kodein: Kodein)
+    : ViewModelProvider.NewInstanceFactory(), KodeinAware {
 
-    override val injector = KodeinInjector()
+    private val taskRepository: TaskRepository by instance()
+    private val workManager: WorkManager by instance()
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
             with(modelClass) {
                 when {
                     isAssignableFrom(TasksViewModel::class.java) ->
-                        TasksViewModel(kodein.instance(), kodein.instance())
+                        TasksViewModel(taskRepository, workManager)
                     isAssignableFrom(CreateTaskViewModel::class.java) ->
-                        CreateTaskViewModel(kodein.instance())
+                        CreateTaskViewModel(taskRepository)
                     else ->
                         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
                 }

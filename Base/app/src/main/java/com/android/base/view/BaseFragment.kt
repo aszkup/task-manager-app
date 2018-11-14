@@ -1,37 +1,26 @@
 package com.android.base.view
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.android.base.model.OperationError
 import com.android.base.model.ViewState
 import com.android.base.utils.extensions.lifeCycleDebug
-import com.github.salomonbrys.kodein.KodeinInjector
-import com.github.salomonbrys.kodein.android.SupportFragmentInjector
-import com.github.salomonbrys.kodein.instance
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.support.closestKodein
+import org.kodein.di.generic.instance
 import timber.log.Timber
 
 /**
  * Base fragment
  */
-abstract class BaseFragment : Fragment(), SupportFragmentInjector {
+abstract class BaseFragment : Fragment(), KodeinAware {
 
-    override val injector: KodeinInjector = KodeinInjector()
+    override val kodein by closestKodein()
     private val fragmentTag: String = this::class.java.simpleName
     private val viewModelFactory: ViewModelProvider.Factory by instance()
 
     init {
         lifeCycleDebug("$fragmentTag:init ${this}")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        initializeInjector()
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onDestroy() {
-        destroyInjector()
-        super.onDestroy()
     }
 
     open fun onBackPressed() = false

@@ -1,7 +1,6 @@
 package com.android.base.view
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.android.base.BaseApplication
@@ -10,32 +9,22 @@ import com.android.base.utils.enums.GENERAL_ERROR
 import com.android.base.utils.extensions.lifeCycleDebug
 import com.android.base.utils.extensions.showToast
 import com.android.base.view.login.BaseAuthActivity
-import com.github.salomonbrys.kodein.KodeinInjector
-import com.github.salomonbrys.kodein.android.AppCompatActivityInjector
-import com.github.salomonbrys.kodein.instance
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.closestKodein
+import org.kodein.di.generic.instance
 import timber.log.Timber
 
 /**
  * Base activity
  */
-abstract class BaseActivity : AppCompatActivity(), AppCompatActivityInjector {
+abstract class BaseActivity : AppCompatActivity(), KodeinAware {
 
-    override val injector = KodeinInjector()
+    override val kodein by closestKodein()
     private val viewModelFactory: ViewModelProvider.Factory by instance()
     private val tag: String = this::class.java.simpleName
 
     init {
         lifeCycleDebug("$tag:init ${this}")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        initializeInjector()
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onDestroy() {
-        destroyInjector()
-        super.onDestroy()
     }
 
     override fun onBackPressed() {
