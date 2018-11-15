@@ -13,7 +13,6 @@ data class Task(
         val id: String = UUID.randomUUID().toString(),
         val name: String,
         val description: String,
-        val state: String,
         val fileUri: String,
         var createdAt: Instant = Instant.now(),
         val scheduledAt: Instant? = null,

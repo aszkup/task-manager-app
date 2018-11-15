@@ -75,8 +75,7 @@ class CreateTaskActivity : BaseActivity() {
         viewModel.createTask(Task(
                 name = nameInput.value,
                 description = descriptionInput.value,
-                fileUri = "",
-                state = "created"))
+                fileUri = ""))
     }
 
     private fun getFile() {
