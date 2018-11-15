@@ -2,7 +2,9 @@ package com.example.protonapp.repository.worker
 
 import android.content.ContentResolver
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
+import android.provider.OpenableColumns
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -17,6 +19,9 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
 import timber.log.Timber
 import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.IOException
+
 
 class UploadFileWorker(
         context: Context,
@@ -34,36 +39,60 @@ class UploadFileWorker(
         Timber.i("Worker ${this::class.java.simpleName} started.")
 
         inputData.getString(TASK_ID)?.let { taskId ->
-            getTaskDisposable = repository.getTask(taskId)
+            repository.getTask(taskId)
                     .doOnSuccess { Timber.d("Task to process $it") }
-                    .subscribe({ sendFile(it) }, { Timber.e(it) })
+                    .doOnSuccess { repository.startTask(it).subscribe() }
+                    .map { sendFile(it) }
+                    .subscribe({ }, { Timber.e(it) })
             return ListenableWorker.Result.SUCCESS
         }
         return ListenableWorker.Result.FAILURE
     }
 
-    private fun sendFile(task: Task) {
+    @Throws(FileNotFoundException::class, IOException::class)
+    private fun sendFile(task: Task): Task {
         Timber.d("File Uri: ${task.fileUri}")
         val fileDescriptor = contentResolver.openFileDescriptor(Uri.parse(task.fileUri), READ_MODE)
         fileDescriptor?.let {
             val stream = FileInputStream(fileDescriptor.fileDescriptor)
-            Uri.parse(task.fileUri).lastPathSegment?.let {
-                val fileName = it.subSequence(it.lastIndexOf("/") + 1, it.length)
-                Timber.i("File to upload: $fileName")
-                dropboxClient.files().uploadBuilder(DROP_BOX_DESTINATION + fileName)
-                        .withMode(WriteMode.OVERWRITE)
-                        .uploadAndFinish(stream, getProgressListener())
-            }
+            val fileName = getFileName(Uri.parse(task.fileUri))
+            Timber.i("File to upload: $fileName")
+            dropboxClient.files().uploadBuilder(DROP_BOX_DESTINATION + fileName)
+                    .withMode(WriteMode.OVERWRITE)
+                    .uploadAndFinish(stream, getProgressListener())
+            repository.finishTask(task).subscribe()
         }
+        return task
     }
 
     private fun getProgressListener() = IOUtil.ProgressListener { progress ->
         Timber.d("(Progress) Uploaded bytes: $progress")
     }
 
+    private fun getFileName(fileUri: Uri): String {
+        if (fileUri.toString().startsWith(CONTENT_PREFIX)) {
+            var cursor: Cursor? = null
+            try {
+                cursor = applicationContext.contentResolver.query(fileUri, null,
+                        null, null, null)
+                if (cursor != null && cursor.moveToFirst()) {
+                    return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                }
+            } finally {
+                cursor?.close()
+            }
+        } else {
+            fileUri.lastPathSegment?.let {
+                return it.subSequence(it.lastIndexOf("/") + 1, it.length).toString()
+            }
+        }
+        return fileUri.toString()
+    }
+
     companion object {
         const val TASK_ID = "task_id"
         const val DROP_BOX_DESTINATION = "/Proton Files/"
         const val READ_MODE = "r"
+        const val CONTENT_PREFIX = "content://"
     }
 }
