@@ -40,6 +40,11 @@ class TaskRepository(
                     .buildFlowable(BackpressureStrategy.LATEST)
                     .subscribeOn(Schedulers.io())
 
+    fun scheduleTask(task: Task): Completable =
+            Completable.fromAction {
+                tasksDao.update(task.copy(scheduledAt = Instant.now(), startedAt = null, finishedAt = null))
+            }.subscribeOn(Schedulers.io())
+
     fun startTask(task: Task): Completable =
             Completable.fromAction {
                 tasksDao.update(task.copy(startedAt = Instant.now(), finishedAt = null))

@@ -16,6 +16,7 @@ data class Task(
         val state: String,
         val fileUri: String,
         var createdAt: Instant = Instant.now(),
+        val scheduledAt: Instant? = null,
         val startedAt: Instant? = null,
         val finishedAt: Instant? = null
 )
