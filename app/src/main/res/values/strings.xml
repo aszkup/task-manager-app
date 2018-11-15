@@ -11,6 +11,7 @@
     <string name="pending_tasks">Pending</string>
     <string name="finished_tasks">Finished</string>
     <string name="task_stored">Task created</string>
+    <string name="file">File:</string>
 
     <string-array name="tab_titles">
         <item>@string/pending_tasks</item>
