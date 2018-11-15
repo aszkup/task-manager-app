@@ -34,9 +34,9 @@ class TasksViewModel(
     }
 
     fun startTask(task: Task, delay: Int) {
-        Timber.i("Start task: ${task.name} with delay: $delay")
-        Timber.d("Start task: $task")
-        taskRepository.startTask(task)
+        Timber.i("Schedule task: ${task.name} with delay: $delay")
+        Timber.d("Schedule task: $task")
+        taskRepository.scheduleTask(task)
                 .subscribe({ startWorker(task, delay) }, { Timber.e(it) })
                 .addTo(disposables)
     }
