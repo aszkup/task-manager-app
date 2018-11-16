@@ -43,12 +43,12 @@
             app:layout_constraintTop_toBottomOf="@+id/taskName"
             tools:text="Task1 Task2 Task3" />
 
-        <TextView
-            android:id="@+id/fileNameHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/fileAttachment"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginTop="@dimen/spacing_tiny"
-            android:text="@string/file"
+            android:src="@drawable/ic_attach_file_24dp"
             app:layout_constraintStart_toStartOf="@+id/taskDescription"
             app:layout_constraintTop_toBottomOf="@+id/taskDescription" />
 
@@ -59,9 +59,9 @@
             android:layout_marginStart="@dimen/spacing_small"
             android:maxLines="1"
             android:text="@{task.fileUri}"
-            app:layout_constraintBottom_toBottomOf="@id/fileNameHeader"
+            app:layout_constraintBottom_toBottomOf="@id/fileAttachment"
             app:layout_constraintEnd_toEndOf="@id/taskDescription"
-            app:layout_constraintStart_toEndOf="@+id/fileNameHeader"
+            app:layout_constraintStart_toEndOf="@+id/fileAttachment"
             tools:text="@string/file" />
 
         <ProgressBar
@@ -75,7 +75,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fileNameHeader"
+            app:layout_constraintTop_toBottomOf="@+id/fileAttachment"
             tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
