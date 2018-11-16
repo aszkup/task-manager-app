@@ -10,6 +10,10 @@
         <variable
             name="task"
             type="com.example.protonapp.repository.task.Task" />
+
+        <variable
+            name="fileName"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,24 +48,25 @@
             tools:text="Task1 Task2 Task3" />
 
         <ImageView
-            android:id="@+id/fileAttachment"
+            android:id="@+id/attachmentIcon"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_marginTop="@dimen/spacing_tiny"
+            android:layout_marginTop="@dimen/spacing_small"
             android:src="@drawable/ic_attach_file_24dp"
             app:layout_constraintStart_toStartOf="@+id/taskDescription"
-            app:layout_constraintTop_toBottomOf="@+id/taskDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/taskDescription"
+            tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/fileName"
+            android:id="@+id/attachmentName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_small"
             android:maxLines="1"
-            android:text="@{task.fileUri}"
-            app:layout_constraintBottom_toBottomOf="@id/fileAttachment"
+            android:text="@{fileName}"
+            app:layout_constraintBottom_toBottomOf="@id/attachmentIcon"
             app:layout_constraintEnd_toEndOf="@id/taskDescription"
-            app:layout_constraintStart_toEndOf="@+id/fileAttachment"
+            app:layout_constraintStart_toEndOf="@+id/attachmentIcon"
             tools:text="@string/file" />
 
         <ProgressBar
@@ -75,7 +80,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fileAttachment"
+            app:layout_constraintTop_toBottomOf="@+id/attachmentIcon"
             tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

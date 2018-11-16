@@ -11,13 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.base.view.BaseFragment
 import com.example.protonapp.R
+import com.example.protonapp.utils.FileUtils
 import com.example.protonapp.view.main.TaskListAdapter
 import com.example.protonapp.view.main.swipecallback.SwipeToStartTaskCallback
 import com.example.protonapp.viewmodel.main.TasksViewModel
 import kotlinx.android.synthetic.main.fragmnet_task_list.*
+import org.kodein.di.generic.instance
 
 class PendingTasksListFragment : BaseFragment() {
 
+    private val fileUtils: FileUtils by instance()
     private lateinit var viewModel: TasksViewModel
     private lateinit var tasksAdapter: TaskListAdapter
 
@@ -43,7 +46,7 @@ class PendingTasksListFragment : BaseFragment() {
     }
 
     private fun setupTaskList() {
-        tasksAdapter = TaskListAdapter()
+        tasksAdapter = TaskListAdapter(fileUtils)
         recyclerView.adapter = tasksAdapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val dividerItemDecoration = DividerItemDecoration(activity, LinearLayoutManager.VERTICAL)
