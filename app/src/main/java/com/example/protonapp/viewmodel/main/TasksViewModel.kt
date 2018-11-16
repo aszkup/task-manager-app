@@ -8,13 +8,15 @@ import com.example.protonapp.repository.task.Task
 import com.example.protonapp.repository.task.TaskRepository
 import com.example.protonapp.repository.worker.UploadFileWorker
 import com.example.protonapp.repository.worker.UploadFileWorker.Companion.TASK_ID
+import com.example.protonapp.utils.WorkManagerUtils
 import io.reactivex.rxkotlin.addTo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class TasksViewModel(
         private val taskRepository: TaskRepository,
-        private val workManager: WorkManager
+        private val workManager: WorkManager,
+        private val workManagerUtils: WorkManagerUtils
 ) : BaseViewModel() {
 
     val viewState: MutableLiveData<PagedList<Task>> = MutableLiveData()
@@ -34,18 +36,16 @@ class TasksViewModel(
     }
 
     fun startTask(task: Task, delay: Int) {
-        Timber.i("Schedule task: ${task.name} with delay: $delay")
+        Timber.i("Schedule task: `${task.name}` with delay: $delay")
         Timber.d("Schedule task: $task")
-        taskRepository.scheduleTask(task)
-                .subscribe({ startWorker(task, delay) }, { Timber.e(it) })
-                .addTo(disposables)
-    }
 
-    fun finishTask(task: Task) {
-        Timber.d("Finish task: $task")
-        taskRepository.finishTask(task)
-                .subscribe({ }, { Timber.e(it) })
-                .addTo(disposables)
+        if (workManagerUtils.isWorkScheduled(task.id)) {
+            Timber.i("Task `${task.name}` already scheduled")
+        } else {
+            taskRepository.scheduleTask(task)
+                    .subscribe({ startWorker(task, delay) }, { Timber.e(it) })
+                    .addTo(disposables)
+        }
     }
 
     private fun startWorker(task: Task, delay: Int) {
@@ -58,6 +58,7 @@ class TasksViewModel(
             setInitialDelay(delay.toLong(), TimeUnit.SECONDS)
             setConstraints(constraints)
             setInputData(data)
+            addTag(task.id)
         }.build()
         workManager.enqueue(work)
     }

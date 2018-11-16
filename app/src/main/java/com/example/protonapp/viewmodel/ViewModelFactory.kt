@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.work.WorkManager
 import com.example.protonapp.repository.task.TaskRepository
+import com.example.protonapp.utils.WorkManagerUtils
 import com.example.protonapp.viewmodel.main.TasksViewModel
 import com.example.protonapp.viewmodel.newtask.CreateTaskViewModel
 import org.kodein.di.Kodein
@@ -18,13 +19,14 @@ class ViewModelFactory(override val kodein: Kodein)
 
     private val taskRepository: TaskRepository by instance()
     private val workManager: WorkManager by instance()
+    private val workManagerUtils: WorkManagerUtils by instance()
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
             with(modelClass) {
                 when {
                     isAssignableFrom(TasksViewModel::class.java) ->
-                        TasksViewModel(taskRepository, workManager)
+                        TasksViewModel(taskRepository, workManager, workManagerUtils)
                     isAssignableFrom(CreateTaskViewModel::class.java) ->
                         CreateTaskViewModel(taskRepository)
                     else ->
