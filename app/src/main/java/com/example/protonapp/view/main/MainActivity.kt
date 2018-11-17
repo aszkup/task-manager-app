@@ -1,18 +1,18 @@
 package com.example.protonapp.view.main
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.android.base.utils.extensions.start
 import com.android.base.view.BaseActivity
 import com.example.protonapp.R
+import com.example.protonapp.utils.extension.addGradientBackground
 import com.example.protonapp.view.main.fragment.FinishedTasksListFragment
 import com.example.protonapp.view.main.fragment.PendingTasksListFragment
 import com.example.protonapp.view.main.pageadapter.TaskListPageAdapter
 import com.example.protonapp.view.newtask.CreateTaskActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 
 class MainActivity : BaseActivity() {
@@ -20,26 +20,11 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        toolbarTitle.text = getString(R.string.your_tasks)
+        addGradientBackground()
 
         setupFab()
         setupViewPager()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     private fun setupFab() {
