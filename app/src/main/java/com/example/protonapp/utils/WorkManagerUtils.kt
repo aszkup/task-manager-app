@@ -3,25 +3,27 @@ package com.example.protonapp.utils
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import timber.log.Timber
-import java.util.concurrent.ExecutionException
 
 class WorkManagerUtils(private val workManager: WorkManager) {
 
     fun isWorkScheduled(tag: String): Boolean {
-        val statuses = workManager.getWorkInfosByTag(tag)
+        return isInState(tag, WorkInfo.State.ENQUEUED)
+    }
+
+    fun isWorkRunning(tag: String): Boolean {
+        return isInState(tag, WorkInfo.State.RUNNING)
+    }
+
+    private fun isInState(tag: String, expectedState: WorkInfo.State): Boolean {
         return try {
-            val workInfoList = statuses.get()
-            for (workInfo in workInfoList) {
+            workManager.getWorkInfosByTag(tag).get().forEach { workInfo ->
                 val state = workInfo.state
-                if ((state == WorkInfo.State.RUNNING) or (state == WorkInfo.State.ENQUEUED)) {
+                if (state == expectedState) {
                     return true
                 }
             }
-            return false
-        } catch (exception: ExecutionException) {
-            Timber.w(exception)
             false
-        } catch (exception: InterruptedException) {
+        } catch (exception: Exception) {
             Timber.w(exception)
             false
         }

@@ -60,12 +60,23 @@ abstract class BaseTasksListFragment : BaseFragment() {
             object : SwipeToStartTaskCallback(swipeDirection) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     tasksAdapter.getItemAt(viewHolder.adapterPosition)?.let {
-                        val isScheduled = viewModel.startTask(it, delay)
-                        if (!isScheduled) {
-                            tasksAdapter.notifyItemChanged(viewHolder.adapterPosition)
-                            showToast(activity, getString(R.string.already_scheduled), GENERAL_MESSAGE)
+                        when {
+                            workManagerUtils.isWorkScheduled(it.id) -> {
+                                onIsScheduledOrRunning(viewHolder.adapterPosition,
+                                        R.string.already_scheduled)
+                            }
+                            workManagerUtils.isWorkRunning(it.id) -> {
+                                onIsScheduledOrRunning(viewHolder.adapterPosition,
+                                        R.string.already_ongoing)
+                            }
+                            else -> viewModel.startTask(it, delay)
                         }
                     }
+                }
+
+                private fun onIsScheduledOrRunning(adapterPosition: Int, stringId: Int) {
+                    tasksAdapter.notifyItemChanged(adapterPosition)
+                    showToast(activity, stringId, GENERAL_MESSAGE)
                 }
             }
 
@@ -78,10 +89,12 @@ abstract class BaseTasksListFragment : BaseFragment() {
     }
 
     private fun onTaskSelected(selectedTask: Task) {
-        if (workManagerUtils.isWorkScheduled(selectedTask.id)) {
-            showToast(activity, R.string.cannot_edit, GENERAL_ERROR)
-        } else {
-            activity?.start<CreateTaskActivity>()
+        when {
+            workManagerUtils.isWorkScheduled(selectedTask.id) ->
+                showToast(activity, R.string.cannot_edit_scheduled, GENERAL_ERROR)
+            workManagerUtils.isWorkRunning(selectedTask.id) ->
+                showToast(activity, R.string.cannot_edit_ongoing, GENERAL_ERROR)
+            else -> activity?.start<CreateTaskActivity>()
         }
     }
 }

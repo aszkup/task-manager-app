@@ -42,7 +42,8 @@ class TaskListAdapter(
         fun bind(task: Task) {
             binding.task = task
             binding.fileName = fileUtils.getFileName(Uri.parse(task.fileUri))
-            binding.isInProgress = workManagerUtils.isWorkScheduled(task.id)
+            binding.isInProgress = workManagerUtils.isWorkScheduled(task.id) or
+                    workManagerUtils.isWorkRunning(task.id)
             binding.executePendingBindings()
             itemView.setOnClickListener { clickListener(task) }
         }

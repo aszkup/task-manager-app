@@ -35,18 +35,12 @@ class TasksViewModel(
                 .addTo(disposables)
     }
 
-    fun startTask(task: Task, delay: Int): Boolean {
+    fun startTask(task: Task, delay: Int) {
         Timber.i("Schedule task: `${task.name}` with delay: $delay")
-        return if (workManagerUtils.isWorkScheduled(task.id)) {
-            Timber.i("Task `${task.name}` already scheduled")
-            false
-        } else {
-            Timber.d("Schedule task: $task")
-            taskRepository.scheduleTask(task)
-                    .subscribe({ startWorker(task, delay) }, { Timber.e(it) })
-                    .addTo(disposables)
-            true
-        }
+        Timber.d("Schedule task: $task")
+        taskRepository.scheduleTask(task)
+                .subscribe({ startWorker(task, delay) }, { Timber.e(it) })
+                .addTo(disposables)
     }
 
     private fun startWorker(task: Task, delay: Int) {
