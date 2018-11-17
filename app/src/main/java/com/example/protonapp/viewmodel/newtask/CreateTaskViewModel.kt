@@ -30,16 +30,17 @@ class CreateTaskViewModel(
 
     fun storeSelectedFileUri(fileUri: Uri) {
         uri = fileUri
+        viewState.postValue(ViewState(CreateTaskViewState(task, uri)))
     }
 
     private fun onTaskAdded() {
         Timber.i("Task stored: $task")
-        viewState.postValue(ViewState(CreateTaskViewState(task, taskStored = true)))
+        viewState.postValue(ViewState(CreateTaskViewState(task, uri, taskStored = true)))
     }
 
     private fun onInsertError(throwable: Throwable) {
         Timber.w("Insertion error: $task")
         Timber.w(throwable)
-        viewState.postValue(ViewState(CreateTaskViewState(task, taskStored = false)))
+        viewState.postValue(ViewState(CreateTaskViewState(task, uri, taskStored = false)))
     }
 }

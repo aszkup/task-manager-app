@@ -8,16 +8,20 @@ import com.android.base.model.OperationError
 import com.android.base.utils.enums.GENERAL_MESSAGE
 import com.android.base.utils.extensions.showToast
 import com.android.base.utils.extensions.value
+import com.android.base.utils.extensions.visible
 import com.android.base.view.BaseActivity
 import com.example.protonapp.R
 import com.example.protonapp.model.CreateTaskViewState
 import com.example.protonapp.repository.task.Task
+import com.example.protonapp.utils.FileUtils
 import com.example.protonapp.viewmodel.newtask.CreateTaskViewModel
 import kotlinx.android.synthetic.main.activity_task_create.*
+import org.kodein.di.generic.instance
 
 class CreateTaskActivity : BaseActivity() {
 
     private lateinit var viewModel: CreateTaskViewModel
+    private val fileUtils: FileUtils by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +60,11 @@ class CreateTaskActivity : BaseActivity() {
         viewState.task?.let {
             nameInput.setText(it.name)
             descriptionInput.setText(it.description)
+        }
+        viewState.fileUri?.let {
+            fileNameText.text = fileUtils.getFileName(it)
+            fileNameText.visible()
+            attachmentIcon.visible()
         }
     }
 
