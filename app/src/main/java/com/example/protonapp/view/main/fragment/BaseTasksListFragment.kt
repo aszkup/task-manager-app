@@ -10,11 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.base.utils.enums.GENERAL_MESSAGE
 import com.android.base.utils.extensions.showToast
+import com.android.base.utils.extensions.start
 import com.android.base.view.BaseFragment
 import com.example.protonapp.R
+import com.example.protonapp.repository.task.Task
 import com.example.protonapp.utils.FileUtils
 import com.example.protonapp.view.main.TaskListAdapter
 import com.example.protonapp.view.main.swipecallback.SwipeToStartTaskCallback
+import com.example.protonapp.view.newtask.CreateTaskActivity
 import com.example.protonapp.viewmodel.main.TasksViewModel
 import kotlinx.android.synthetic.main.fragmnet_task_list.*
 import org.kodein.di.generic.instance
@@ -64,10 +67,14 @@ abstract class BaseTasksListFragment : BaseFragment() {
             }
 
     private fun setupTaskList() {
-        tasksAdapter = TaskListAdapter(fileUtils)
+        tasksAdapter = TaskListAdapter(fileUtils) { selectedTask -> onTaskSelected(selectedTask) }
         recyclerView.adapter = tasksAdapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val dividerItemDecoration = DividerItemDecoration(activity, LinearLayoutManager.VERTICAL)
         recyclerView.addItemDecoration(dividerItemDecoration)
+    }
+
+    private fun onTaskSelected(selectedTask: Task) {
+        activity?.start<CreateTaskActivity>()
     }
 }

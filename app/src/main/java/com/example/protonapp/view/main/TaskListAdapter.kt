@@ -13,13 +13,15 @@ import com.example.protonapp.utils.FileUtils
 /**
  * Task list adapter
  */
-class TaskListAdapter(private val fileUtils: FileUtils)
+class TaskListAdapter(
+        private val fileUtils: FileUtils,
+        private val clickListener: (Task) -> Unit)
     : PagedListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemTaskBinding.inflate(inflater, parent, false)
-        return TaskViewHolder(binding, fileUtils)
+        return TaskViewHolder(binding, fileUtils, clickListener)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
@@ -30,13 +32,15 @@ class TaskListAdapter(private val fileUtils: FileUtils)
 
     inner class TaskViewHolder(
             private val binding: ItemTaskBinding,
-            private val fileUtils: FileUtils)
+            private val fileUtils: FileUtils,
+            private val clickListener: (Task) -> Unit)
         : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(task: Task) {
             binding.task = task
             binding.fileName = fileUtils.getFileName(Uri.parse(task.fileUri))
             binding.executePendingBindings()
+            itemView.setOnClickListener { clickListener(task) }
         }
     }
 
