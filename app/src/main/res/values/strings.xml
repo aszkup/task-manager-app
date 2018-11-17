@@ -18,6 +18,7 @@
     <string name="your_tasks">Your Tasks</string>
     <string name="create_task_failed">Create task failed</string>
     <string name="create_task">Create Task</string>
+    <string name="cannot_edit">Cannot edit scheduled\nor ongoing task</string>
 
     <string-array name="tab_titles">
         <item>@string/pending_tasks</item>

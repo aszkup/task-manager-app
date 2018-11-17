@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.base.utils.enums.GENERAL_ERROR
 import com.android.base.utils.enums.GENERAL_MESSAGE
 import com.android.base.utils.extensions.showToast
 import com.android.base.utils.extensions.start
@@ -15,6 +16,7 @@ import com.android.base.view.BaseFragment
 import com.example.protonapp.R
 import com.example.protonapp.repository.task.Task
 import com.example.protonapp.utils.FileUtils
+import com.example.protonapp.utils.WorkManagerUtils
 import com.example.protonapp.view.main.TaskListAdapter
 import com.example.protonapp.view.main.swipecallback.SwipeToStartTaskCallback
 import com.example.protonapp.view.newtask.CreateTaskActivity
@@ -27,6 +29,7 @@ abstract class BaseTasksListFragment : BaseFragment() {
     protected lateinit var viewModel: TasksViewModel
     private lateinit var tasksAdapter: TaskListAdapter
     private val fileUtils: FileUtils by instance()
+    private val workManagerUtils: WorkManagerUtils by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +78,10 @@ abstract class BaseTasksListFragment : BaseFragment() {
     }
 
     private fun onTaskSelected(selectedTask: Task) {
-        activity?.start<CreateTaskActivity>()
+        if (workManagerUtils.isWorkScheduled(selectedTask.id)) {
+            showToast(activity, R.string.cannot_edit, GENERAL_ERROR)
+        } else {
+            activity?.start<CreateTaskActivity>()
+        }
     }
 }
