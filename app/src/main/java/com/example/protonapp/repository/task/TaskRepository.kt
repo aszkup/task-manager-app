@@ -20,7 +20,6 @@ class TaskRepository(
 
     fun getTask(id: String): Maybe<Task> =
             tasksDao.taskWithId(id)
-                    .subscribeOn(Schedulers.io())
 
     fun getTasks() = tasksDao.tasks()
             .subscribeOn(Schedulers.io())
