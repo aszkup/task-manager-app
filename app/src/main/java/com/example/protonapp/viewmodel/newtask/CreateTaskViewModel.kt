@@ -3,8 +3,11 @@ package com.example.protonapp.viewmodel.newtask
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.android.base.model.InProgress
+import com.android.base.model.OperationError
 import com.android.base.model.ViewState
+import com.android.base.utils.BaseMessage
 import com.android.base.viewmodel.BaseViewModel
+import com.example.protonapp.R
 import com.example.protonapp.model.CreateTaskViewState
 import com.example.protonapp.repository.task.Task
 import com.example.protonapp.repository.task.TaskRepository
@@ -41,6 +44,7 @@ class CreateTaskViewModel(
     private fun onInsertError(throwable: Throwable) {
         Timber.w("Insertion error: $task")
         Timber.w(throwable)
-        viewState.postValue(ViewState(CreateTaskViewState(task, uri, taskStored = false)))
+        viewState.postValue(ViewState(CreateTaskViewState(task, uri, taskStored = false),
+                status = OperationError(BaseMessage(R.string.create_task_failed))))
     }
 }

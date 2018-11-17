@@ -16,6 +16,8 @@
     <string name="uploading">Uploading: </string>
     <string name="already_scheduled">Task already in progress</string>
     <string name="your_tasks">Your Tasks</string>
+    <string name="create_task_failed">Create task failed</string>
+    <string name="create_task">Create Task</string>
 
     <string-array name="tab_titles">
         <item>@string/pending_tasks</item>

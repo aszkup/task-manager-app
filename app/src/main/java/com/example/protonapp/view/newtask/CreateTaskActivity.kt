@@ -14,8 +14,10 @@ import com.example.protonapp.R
 import com.example.protonapp.model.CreateTaskViewState
 import com.example.protonapp.repository.task.Task
 import com.example.protonapp.utils.FileUtils
+import com.example.protonapp.utils.extension.addGradientBackground
 import com.example.protonapp.viewmodel.newtask.CreateTaskViewModel
 import kotlinx.android.synthetic.main.activity_task_create.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.kodein.di.generic.instance
 
 class CreateTaskActivity : BaseActivity() {
@@ -26,10 +28,12 @@ class CreateTaskActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_create)
+        toolbarTitle.text = getString(R.string.create_task)
+        addGradientBackground()
 
         viewModel = getModel(CreateTaskViewModel::class.java)
         viewModel.viewState.observe(this, Observer {
-            viewStateUpdated(it, ::onNewState, ::showInProgress, ::hideInProgress, ::showError)
+            viewStateUpdated(it, ::onNewState, showError = ::showError)
         })
         setupButtons()
     }
@@ -68,16 +72,8 @@ class CreateTaskActivity : BaseActivity() {
         }
     }
 
-    private fun showInProgress() {
-
-    }
-
-    private fun hideInProgress() {
-
-    }
-
     private fun showError(operationError: OperationError) {
-
+        showErrorMessage(operationError)
     }
 
     private fun createTask() {
