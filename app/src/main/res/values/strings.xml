@@ -14,6 +14,7 @@
     <string name="file">File:</string>
     <string name="upload_completed">Upload completed</string>
     <string name="uploading">Uploading: </string>
+    <string name="already_scheduled">Task already in progress</string>
 
     <string-array name="tab_titles">
         <item>@string/pending_tasks</item>

@@ -10,13 +10,14 @@ class WorkManagerUtils(private val workManager: WorkManager) {
     fun isWorkScheduled(tag: String): Boolean {
         val statuses = workManager.getWorkInfosByTag(tag)
         return try {
-            var running = false
             val workInfoList = statuses.get()
             for (workInfo in workInfoList) {
                 val state = workInfo.state
-                running = (state == WorkInfo.State.RUNNING) or (state == WorkInfo.State.ENQUEUED)
+                if ((state == WorkInfo.State.RUNNING) or (state == WorkInfo.State.ENQUEUED)) {
+                    return true
+                }
             }
-            running
+            return false
         } catch (exception: ExecutionException) {
             Timber.w(exception)
             false

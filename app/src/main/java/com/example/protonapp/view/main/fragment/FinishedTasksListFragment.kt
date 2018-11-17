@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.base.utils.enums.GENERAL_MESSAGE
+import com.android.base.utils.extensions.showToast
 import com.android.base.view.BaseFragment
 import com.example.protonapp.R
 import com.example.protonapp.utils.FileUtils
@@ -60,7 +62,11 @@ class FinishedTasksListFragment : BaseFragment() {
             object : SwipeToStartTaskCallback(swipeDirection) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     tasksAdapter.getItemAt(viewHolder.adapterPosition)?.let {
-                        viewModel.startTask(it, delay)
+                        val isScheduled = viewModel.startTask(it, delay)
+                        if (!isScheduled) {
+                            tasksAdapter.notifyItemChanged(viewHolder.adapterPosition)
+                            showToast(activity, getString(R.string.already_scheduled), GENERAL_MESSAGE)
+                        }
                     }
                 }
             }
