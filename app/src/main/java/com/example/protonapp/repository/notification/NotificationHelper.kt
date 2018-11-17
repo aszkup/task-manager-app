@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.protonapp.R
 
-class NotificationUtils(private val context: Context) {
+class NotificationHelper(private val context: Context) {
 
     private val notificationManager = NotificationManagerCompat.from(context)
     private val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -24,7 +24,7 @@ class NotificationUtils(private val context: Context) {
         notificationId++
         val localNotificationId = notificationId
         notificationBuilder.apply {
-            setSmallIcon(R.drawable.ic_launcher_foreground)
+            setSmallIcon(R.drawable.ic_notifications_24dp)
             setContentTitle(taskName)
             setContentText(context.getString(R.string.uploading) + " $originName")
             setOnlyAlertOnce(true)
