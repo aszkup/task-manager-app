@@ -7,6 +7,8 @@
 
         <import type="android.text.TextUtils" />
 
+        <import type="android.view.View" />
+
         <variable
             name="task"
             type="com.example.protonapp.repository.task.Task" />
@@ -14,6 +16,10 @@
         <variable
             name="fileName"
             type="String" />
+
+        <variable
+            name="isInProgress"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +37,7 @@
             android:layout_marginStart="@dimen/spacing_large"
             android:layout_marginTop="@dimen/spacing_small"
             android:layout_marginEnd="@dimen/spacing_large"
+            android:ellipsize="end"
             android:maxLines="1"
             android:text="@{task.name}"
             android:textColor="@color/blue_gradient"
@@ -45,6 +52,8 @@
             android:id="@+id/taskDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
             android:text="@{TextUtils.isEmpty(task.description) ? `[No description]` : task.description }"
             app:layout_constraintEnd_toEndOf="@+id/taskName"
             app:layout_constraintStart_toStartOf="@+id/taskName"
@@ -75,13 +84,14 @@
             tools:text="@string/file" />
 
         <ProgressBar
+            android:id="@+id/taskProgressBar"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
             android:layout_marginEnd="@dimen/spacing_large"
             android:indeterminate="true"
-            android:visibility="gone"
+            android:visibility="@{isInProgress ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

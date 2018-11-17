@@ -70,7 +70,7 @@ abstract class BaseTasksListFragment : BaseFragment() {
             }
 
     private fun setupTaskList() {
-        tasksAdapter = TaskListAdapter(fileUtils) { selectedTask -> onTaskSelected(selectedTask) }
+        tasksAdapter = TaskListAdapter(fileUtils, workManagerUtils) { selectedTask -> onTaskSelected(selectedTask) }
         recyclerView.adapter = tasksAdapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val dividerItemDecoration = DividerItemDecoration(activity, LinearLayoutManager.VERTICAL)
