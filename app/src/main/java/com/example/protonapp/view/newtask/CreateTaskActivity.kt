@@ -2,6 +2,7 @@ package com.example.protonapp.view.newtask
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.android.base.model.OperationError
@@ -25,6 +26,7 @@ class CreateTaskActivity : BaseActivity() {
 
     private lateinit var viewModel: CreateTaskViewModel
     private val fileUtils: FileUtils by instance()
+    private var uri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +47,13 @@ class CreateTaskActivity : BaseActivity() {
             return
         }
         returnIntent?.data?.also { returnUri ->
+            uri = returnUri
             viewModel.storeSelectedFileUri(returnUri)
         }
     }
 
     private fun setupButtons() {
-        saveButton.setOnClickListener { createTask() }
+        saveButton.setOnClickListener { if (areFieldsValid()) createTask() }
         cancelButton.setOnClickListener { finish() }
         selectFileButton.setOnClickListener { getFile() }
     }
@@ -90,6 +93,18 @@ class CreateTaskActivity : BaseActivity() {
             type = FILE_TYPE
         }
         startActivityForResult(intent, 0)
+    }
+
+    private fun areFieldsValid() = when {
+        nameInput.value.isEmpty() -> {
+            showToast(this, R.string.no_name_specified, GENERAL_MESSAGE)
+            false
+        }
+        uri == null -> {
+            showToast(this, R.string.no_file_selected, GENERAL_MESSAGE)
+            false
+        }
+        else -> true
     }
 
     companion object {

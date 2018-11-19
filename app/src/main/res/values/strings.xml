@@ -21,6 +21,8 @@
     <string name="create_task">Create Task</string>
     <string name="cannot_edit_scheduled">Cannot edit scheduled task</string>
     <string name="cannot_edit_ongoing">Cannot edit ongoing task</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="no_name_specified">No name specified</string>
 
     <string-array name="tab_titles">
         <item>@string/pending_tasks</item>
