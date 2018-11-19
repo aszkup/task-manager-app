@@ -18,6 +18,7 @@ import com.example.protonapp.repository.task.Task
 import com.example.protonapp.utils.FileUtils
 import com.example.protonapp.utils.extension.addGradientBackground
 import com.example.protonapp.viewmodel.newtask.CreateTaskViewModel
+import com.hootsuite.nachos.terminator.ChipTerminatorHandler
 import kotlinx.android.synthetic.main.activity_task_create.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.kodein.di.generic.instance
@@ -38,7 +39,11 @@ class CreateTaskActivity : BaseActivity() {
         viewModel.viewState.observe(this, Observer {
             viewStateUpdated(it, ::onNewState, showError = ::showError)
         })
-        rootLayout.setOnClickListener { hideSoftKeyboard() }
+        rootLayout.setOnClickListener { hideSoftKeyboard(); it.requestFocus() }
+        keywordsInput.apply {
+            addChipTerminator(' ', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
+            addChipTerminator('\n', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
+        }
         setupButtons()
     }
 

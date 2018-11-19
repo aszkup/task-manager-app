@@ -23,6 +23,7 @@
     <string name="cannot_edit_ongoing">Cannot edit ongoing task</string>
     <string name="no_file_selected">No file selected</string>
     <string name="no_name_specified">No name specified</string>
+    <string name="add_keywords">Add keywords</string>
 
     <string-array name="tab_titles">
         <item>@string/pending_tasks</item>
