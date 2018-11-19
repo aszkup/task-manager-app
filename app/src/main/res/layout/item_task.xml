@@ -18,7 +18,15 @@
             type="String" />
 
         <variable
+            name="duration"
+            type="String" />
+
+        <variable
             name="isInProgress"
+            type="Boolean" />
+
+        <variable
+            name="isFinished"
             type="Boolean" />
     </data>
 
@@ -82,6 +90,31 @@
             app:layout_constraintEnd_toEndOf="@id/taskDescription"
             app:layout_constraintStart_toEndOf="@+id/attachmentIcon"
             tools:text="@string/file" />
+
+        <TextView
+            android:id="@+id/timeHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginTop="4dp"
+            android:text="@string/execution_time"
+            android:visibility="@{isFinished ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/attachmentIcon" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:text="@{duration}"
+            android:visibility="@{isFinished ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/timeHeader"
+            app:layout_constraintTop_toBottomOf="@+id/attachmentIcon"
+            tools:text="24m 30s" />
 
         <ProgressBar
             android:id="@+id/taskProgressBar"

@@ -2,10 +2,7 @@ package com.example.protonapp.repository.task
 
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Maybe
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
 
@@ -44,15 +41,18 @@ class TaskRepository(
                 tasksDao.update(task.copy(scheduledAt = Instant.now(), startedAt = null, finishedAt = null))
             }.subscribeOn(Schedulers.io())
 
-    fun startTask(task: Task): Completable =
-            Completable.fromAction {
-                tasksDao.update(task.copy(startedAt = Instant.now(), finishedAt = null))
-            }.subscribeOn(Schedulers.io())
+    fun startTask(task: Task): Single<Task> =
+            Single.just(task)
+                    .subscribeOn(Schedulers.io())
+                    .map { task.copy(startedAt = Instant.now(), finishedAt = null) }
+                    .doOnSuccess { tasksDao.update(it) }
 
-    fun finishTask(task: Task): Completable =
-            Completable.fromAction {
-                tasksDao.update(task.copy(finishedAt = Instant.now()))
-            }.subscribeOn(Schedulers.io())
+
+    fun finishTask(task: Task): Single<Task> =
+            Single.just(task)
+                    .subscribeOn(Schedulers.io())
+                    .map { task.copy(finishedAt = Instant.now()) }
+                    .doOnSuccess { tasksDao.update(it) }
 
     fun remove(task: Task): Completable =
             Completable.fromAction {

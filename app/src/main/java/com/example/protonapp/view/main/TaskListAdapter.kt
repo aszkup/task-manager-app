@@ -10,6 +10,8 @@ import com.example.protonapp.databinding.ItemTaskBinding
 import com.example.protonapp.repository.task.Task
 import com.example.protonapp.utils.FileUtils
 import com.example.protonapp.utils.WorkManagerUtils
+import org.threeten.bp.Duration
+
 
 /**
  * Task list adapter
@@ -42,11 +44,18 @@ class TaskListAdapter(
         fun bind(task: Task) {
             binding.task = task
             binding.fileName = fileUtils.getFileName(Uri.parse(task.fileUri))
+            task.finishedAt?.let {
+                binding.isFinished = true
+                binding.duration = printDuration(Duration.between(task.startedAt, task.finishedAt))
+            }
             binding.isInProgress = workManagerUtils.isWorkScheduled(task.id) or
                     workManagerUtils.isWorkRunning(task.id)
             binding.executePendingBindings()
             itemView.setOnClickListener { clickListener(task) }
         }
+
+        private fun printDuration(duration: Duration): String =
+                "${duration.toHours()}h ${duration.toMinutes() % 60}m ${duration.seconds % 60}s"
     }
 
     private class TaskDiffCallback : DiffUtil.ItemCallback<Task>() {
