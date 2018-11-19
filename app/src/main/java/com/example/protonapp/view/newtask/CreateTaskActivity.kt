@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.android.base.model.OperationError
 import com.android.base.utils.enums.GENERAL_MESSAGE
+import com.android.base.utils.extensions.hideSoftKeyboard
 import com.android.base.utils.extensions.showToast
 import com.android.base.utils.extensions.value
 import com.android.base.utils.extensions.visible
@@ -35,6 +36,7 @@ class CreateTaskActivity : BaseActivity() {
         viewModel.viewState.observe(this, Observer {
             viewStateUpdated(it, ::onNewState, showError = ::showError)
         })
+        rootLayout.setOnClickListener { hideSoftKeyboard() }
         setupButtons()
     }
 
