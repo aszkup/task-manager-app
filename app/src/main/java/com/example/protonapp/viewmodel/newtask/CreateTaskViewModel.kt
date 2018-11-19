@@ -23,9 +23,26 @@ class CreateTaskViewModel(
 
     val viewState: MutableLiveData<ViewState<CreateTaskViewState>> = MutableLiveData()
 
+    fun init(task: Task) {
+        Timber.d("Init with task: $task")
+        this.task = task
+        this.uri = Uri.parse(task.fileUri)
+        viewState.postValue(ViewState(CreateTaskViewState(task, uri)))
+    }
+
     fun createTask(task: Task) {
         this.task = task
+        Timber.d("Create task: ${this.task}")
         taskRepository.store(task.copy(fileUri = uri.toString()))
+                .doOnSubscribe { viewState.value = ViewState(status = InProgress()) }
+                .subscribe(::onTaskAdded, ::onInsertError)
+                .addTo(disposables)
+    }
+
+    fun saveTask(task: Task) {
+        this.task = task.copy(id = this.task!!.id, fileUri = uri.toString())
+        Timber.d("Update task: ${this.task}")
+        taskRepository.store(this.task!!)
                 .doOnSubscribe { viewState.value = ViewState(status = InProgress()) }
                 .subscribe(::onTaskAdded, ::onInsertError)
                 .addTo(disposables)
@@ -37,7 +54,7 @@ class CreateTaskViewModel(
     }
 
     private fun onTaskAdded() {
-        Timber.i("Task stored: $task")
+        Timber.i("Task stored: ${task?.name}")
         viewState.postValue(ViewState(CreateTaskViewState(task, uri, taskStored = true)))
     }
 

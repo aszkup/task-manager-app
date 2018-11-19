@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.base.utils.enums.GENERAL_ERROR
 import com.android.base.utils.enums.GENERAL_MESSAGE
+import com.android.base.utils.extensions.componentFor
 import com.android.base.utils.extensions.showToast
-import com.android.base.utils.extensions.start
+import com.android.base.utils.extensions.startActivity
 import com.android.base.view.BaseFragment
 import com.example.protonapp.R
 import com.example.protonapp.repository.task.Task
@@ -94,7 +95,14 @@ abstract class BaseTasksListFragment : BaseFragment() {
                 showToast(activity, R.string.cannot_edit_scheduled, GENERAL_ERROR)
             workManagerUtils.isWorkRunning(selectedTask.id) ->
                 showToast(activity, R.string.cannot_edit_ongoing, GENERAL_ERROR)
-            else -> activity?.start<CreateTaskActivity>()
+            else -> {
+            }
+        }
+        context?.let { context ->
+            context.startActivity {
+                component = context.componentFor(CreateTaskActivity::class.java)
+                putExtra(CreateTaskActivity.TASK, selectedTask)
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.annotation.Nullable
 import androidx.lifecycle.Observer
 import com.android.base.model.OperationError
 import com.android.base.utils.enums.GENERAL_MESSAGE
@@ -18,6 +19,8 @@ import com.example.protonapp.repository.task.Task
 import com.example.protonapp.utils.FileUtils
 import com.example.protonapp.utils.extension.addGradientBackground
 import com.example.protonapp.viewmodel.newtask.CreateTaskViewModel
+import com.f2prateek.dart.Dart
+import com.f2prateek.dart.InjectExtra
 import com.hootsuite.nachos.terminator.ChipTerminatorHandler
 import kotlinx.android.synthetic.main.activity_task_create.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -29,7 +32,13 @@ class CreateTaskActivity : BaseActivity() {
     private val fileUtils: FileUtils by instance()
     private var uri: Uri? = null
 
+    @Nullable
+    @JvmField
+    @InjectExtra(TASK)
+    var task: Task? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        Dart.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_create)
         toolbarTitle.text = getString(R.string.create_task)
@@ -39,6 +48,9 @@ class CreateTaskActivity : BaseActivity() {
         viewModel.viewState.observe(this, Observer {
             viewStateUpdated(it, ::onNewState, showError = ::showError)
         })
+
+        task?.let { initWithTask(it) }
+
         rootLayout.setOnClickListener { hideSoftKeyboard(); it.requestFocus() }
         keywordsInput.apply {
             addChipTerminator(' ', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
@@ -58,6 +70,11 @@ class CreateTaskActivity : BaseActivity() {
         }
     }
 
+    private fun initWithTask(task: Task) {
+        viewModel.init(task)
+        toolbarTitle.text = getString(R.string.edit_task)
+    }
+
     private fun setupButtons() {
         saveButton.setOnClickListener { if (areFieldsValid()) createTask() }
         cancelButton.setOnClickListener { finish() }
@@ -65,8 +82,13 @@ class CreateTaskActivity : BaseActivity() {
     }
 
     private fun onNewState(viewState: CreateTaskViewState) {
-        viewState.taskStored?.let { stored ->
-            if (stored) {
+        viewState.taskStored?.let { isStored ->
+            if (isStored) {
+                task?.let {
+                    showToast(application, getString(R.string.task_updated), GENERAL_MESSAGE)
+                    finish()
+                    return
+                }
                 showToast(application, getString(R.string.task_stored), GENERAL_MESSAGE)
                 finish()
                 return
@@ -75,8 +97,13 @@ class CreateTaskActivity : BaseActivity() {
         viewState.task?.let {
             nameInput.setText(it.name)
             descriptionInput.setText(it.description)
+            it.keywords?.let { keywords ->
+                val keywordsList = keywords.split(KEYWORDS_SEPARATOR)
+                keywordsInput.setText(keywordsList)
+            }
         }
         viewState.fileUri?.let {
+            uri = it
             fileNameText.text = fileUtils.getFileName(it)
             fileNameText.visible()
             attachmentIcon.visible()
@@ -88,11 +115,16 @@ class CreateTaskActivity : BaseActivity() {
     }
 
     private fun createTask() {
-        viewModel.createTask(Task(
+        val taskToStore = Task(
                 name = nameInput.value,
                 description = descriptionInput.value.trim(),
                 fileUri = "",
-                keywords = getKeywords()))
+                keywords = getKeywords())
+        task?.let {
+            viewModel.saveTask(taskToStore)
+            return
+        }
+        viewModel.createTask(taskToStore)
     }
 
     private fun getFile() {
@@ -114,10 +146,14 @@ class CreateTaskActivity : BaseActivity() {
         else -> true
     }
 
-    private fun getKeywords() = if (keywordsInput.chipValues.isNotEmpty())
-        keywordsInput.chipValues.joinToString(separator = ",") else null
+    private fun getKeywords() =
+            if (keywordsInput.chipValues.isNotEmpty())
+                keywordsInput.chipValues.joinToString(separator = KEYWORDS_SEPARATOR)
+            else null
 
     companion object {
         const val FILE_TYPE = "*/*"
+        const val TASK = "task"
+        const val KEYWORDS_SEPARATOR = ","
     }
 }

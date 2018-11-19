@@ -11,6 +11,7 @@
     <string name="pending_tasks">Pending</string>
     <string name="finished_tasks">Finished</string>
     <string name="task_stored">Task created</string>
+    <string name="task_updated">Task updated</string>
     <string name="file">File:</string>
     <string name="upload_completed">Upload completed</string>
     <string name="uploading">Uploading: </string>
@@ -19,6 +20,7 @@
     <string name="your_tasks">Your Tasks</string>
     <string name="create_task_failed">Create task failed</string>
     <string name="create_task">Create Task</string>
+    <string name="edit_task">Edit Task</string>
     <string name="cannot_edit_scheduled">Cannot edit scheduled task</string>
     <string name="cannot_edit_ongoing">Cannot edit ongoing task</string>
     <string name="no_file_selected">No file selected</string>

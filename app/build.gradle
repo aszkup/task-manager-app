@@ -28,6 +28,9 @@ android {
     dataBinding {
         enabled = true
     }
+    androidExtensions {
+        experimental = true
+    }
     lintOptions {
         abortOnError false
         lintConfig file("../../lint.xml")
@@ -38,8 +41,10 @@ dependencies {
     def room_version = "2.1.0-alpha02"
     def paging_version = "2.1.0-beta01"
     def work_version = "1.0.0-alpha11"
+    def dart_version = "2.0.3"
 
     kapt "androidx.room:room-compiler:$room_version"
+    kapt "com.f2prateek.dart:dart-processor:$dart_version"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -56,6 +61,8 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation "com.hootsuite.android:nachos:1.1.1"
 
+    implementation "com.f2prateek.dart:dart-annotations:$dart_version"
+    implementation "com.f2prateek.dart:dart:$dart_version"
     implementation 'com.dropbox.core:dropbox-core-sdk:3.0.10'
 
     testImplementation 'junit:junit:4.12'
