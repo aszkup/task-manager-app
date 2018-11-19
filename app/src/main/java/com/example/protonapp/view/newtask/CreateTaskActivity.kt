@@ -43,6 +43,7 @@ class CreateTaskActivity : BaseActivity() {
         keywordsInput.apply {
             addChipTerminator(' ', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
             addChipTerminator('\n', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
+            addChipTerminator(',', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
         }
         setupButtons()
     }
@@ -89,8 +90,9 @@ class CreateTaskActivity : BaseActivity() {
     private fun createTask() {
         viewModel.createTask(Task(
                 name = nameInput.value,
-                description = descriptionInput.value,
-                fileUri = ""))
+                description = descriptionInput.value.trim(),
+                fileUri = "",
+                keywords = getKeywords()))
     }
 
     private fun getFile() {
@@ -111,6 +113,9 @@ class CreateTaskActivity : BaseActivity() {
         }
         else -> true
     }
+
+    private fun getKeywords() = if (keywordsInput.chipValues.isNotEmpty())
+        keywordsInput.chipValues.joinToString(separator = ",") else null
 
     companion object {
         const val FILE_TYPE = "*/*"
