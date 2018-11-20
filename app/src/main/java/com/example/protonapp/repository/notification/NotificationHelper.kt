@@ -3,11 +3,14 @@ package com.example.protonapp.repository.notification
 import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.protonapp.R
+import com.example.protonapp.view.main.MainActivity
 
 class NotificationHelper(private val context: Context) {
 
@@ -23,12 +26,14 @@ class NotificationHelper(private val context: Context) {
     fun createNotification(taskName: String, originName: String): Int {
         notificationId++
         val localNotificationId = notificationId
+
         notificationBuilder.apply {
             setSmallIcon(R.drawable.ic_notifications_24dp)
             setContentTitle(taskName)
             setContentText(context.getString(R.string.uploading) + " $originName")
             setOnlyAlertOnce(true)
             setProgress(PROGRESS_MAX, PROGRESS_INIT, false)
+            setContentIntent(getOpenActivityIntent())
             priority = NotificationCompat.PRIORITY_DEFAULT
         }
         notificationManager.notify(localNotificationId, notificationBuilder.build())
@@ -65,6 +70,13 @@ class NotificationHelper(private val context: Context) {
         val notificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun getOpenActivityIntent(): PendingIntent {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        return PendingIntent.getActivity(context, 0, intent, 0)
     }
 
     companion object {
