@@ -8,15 +8,13 @@ import com.example.protonapp.repository.task.Task
 import com.example.protonapp.repository.task.TaskRepository
 import com.example.protonapp.repository.worker.UploadFileWorker
 import com.example.protonapp.repository.worker.UploadFileWorker.Companion.TASK_ID
-import com.example.protonapp.utils.WorkManagerUtils
 import io.reactivex.rxkotlin.addTo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class TasksViewModel(
         private val taskRepository: TaskRepository,
-        private val workManager: WorkManager,
-        private val workManagerUtils: WorkManagerUtils
+        private val workManager: WorkManager
 ) : BaseViewModel() {
 
     val viewState: MutableLiveData<PagedList<Task>> = MutableLiveData()
