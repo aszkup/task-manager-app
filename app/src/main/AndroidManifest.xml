@@ -28,6 +28,14 @@
         <activity
             android:name=".view.newtask.CreateTaskActivity"
             android:launchMode="singleTask" />
+
+        <receiver android:name=".repository.notification.NotificationReceiver">
+            <intent-filter>
+                <action android:name="cancel_task" />
+                <action android:name="create_task" />
+
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -27,7 +27,11 @@
     <string name="no_name_specified">No name specified</string>
     <string name="add_keywords">Add keywords</string>
     <string name="execution_time">Execution time:</string>
+    <string name="new_task">New</string>
 
+    <string name="cancel_task_action" translatable="false">cancel_task</string>
+    <string name="create_task_action" translatable="false">create_task</string>
+    
     <string-array name="tab_titles">
         <item>@string/pending_tasks</item>
         <item>@string/finished_tasks</item>

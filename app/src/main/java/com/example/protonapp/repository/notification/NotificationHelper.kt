@@ -24,12 +24,14 @@ class NotificationHelper(private val context: Context) {
         initNotificationBuilder()
     }
 
-    fun createNotification(taskName: String, originName: String): Int {
+    fun createNotification(taskId: String, taskName: String, originName: String): Int {
         notificationId++
         val localNotificationId = notificationId
         notificationBuilder.apply {
             setContentTitle(taskName)
             setContentText(context.getString(R.string.uploading) + " $originName")
+            addAction(0, context.getString(R.string.cancel), getCancelTaskIntent(taskId, taskName))
+            addAction(0, context.getString(R.string.new_task), getCreateTaskIntent())
         }
         notificationManager.notify(localNotificationId, notificationBuilder.build())
         return localNotificationId
@@ -84,13 +86,37 @@ class NotificationHelper(private val context: Context) {
         return PendingIntent.getActivity(context, 0, intent, 0)
     }
 
+    private fun getCancelTaskIntent(taskId: String, taskName: String): PendingIntent {
+        val intent = Intent().apply {
+            action = context.getString(R.string.cancel_task_action)
+            setClass(context, NotificationReceiver::class.java)
+            putExtra(TASK_ID, taskId)
+            putExtra(TASK_NAME, taskName)
+        }
+        return PendingIntent.getBroadcast(context, CANCEL_REQUEST_CODE, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    private fun getCreateTaskIntent(): PendingIntent {
+        val intent = Intent().apply {
+            action = context.getString(R.string.create_task_action)
+            setClass(context, NotificationReceiver::class.java)
+        }
+        return PendingIntent.getBroadcast(context, CREATE_REQUEST_CODE, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
     companion object {
         @JvmStatic
         var notificationId = 1000
         const val PROGRESS_MAX = 100
         const val PROGRESS_INIT = 0
         const val CHANNEL_ID = "proton_channel_id"
+        const val TASK_ID = "task_id"
+        const val TASK_NAME = "task_name"
         const val CHANNEL_NAME = "Proton"
         const val CHANNEL_DESCRIPTION = "Proton Channel"
+        const val CANCEL_REQUEST_CODE = 100
+        const val CREATE_REQUEST_CODE = 101
     }
 }

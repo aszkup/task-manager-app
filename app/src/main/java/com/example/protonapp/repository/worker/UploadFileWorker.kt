@@ -60,7 +60,7 @@ class UploadFileWorker(
             val fileName = fileUtils.getFileName(Uri.parse(task.fileUri))
             Timber.i("File to upload: $fileName")
             repository.startTask(task).subscribe({ task = it }, { Timber.e(it) })
-            notificationId = notificationHelper.createNotification(task.name, fileName)
+            notificationId = notificationHelper.createNotification(task.id, task.name, fileName)
             dropboxClient.files().uploadBuilder(DROP_BOX_DESTINATION + fileName)
                     .withMode(WriteMode.OVERWRITE)
                     .uploadAndFinish(stream, getProgressListener(it.statSize))
