@@ -21,20 +21,15 @@ class NotificationHelper(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
+        initNotificationBuilder()
     }
 
     fun createNotification(taskName: String, originName: String): Int {
         notificationId++
         val localNotificationId = notificationId
-
         notificationBuilder.apply {
-            setSmallIcon(R.drawable.ic_notifications_24dp)
             setContentTitle(taskName)
             setContentText(context.getString(R.string.uploading) + " $originName")
-            setOnlyAlertOnce(true)
-            setProgress(PROGRESS_MAX, PROGRESS_INIT, false)
-            setContentIntent(getOpenActivityIntent())
-            priority = NotificationCompat.PRIORITY_DEFAULT
         }
         notificationManager.notify(localNotificationId, notificationBuilder.build())
         return localNotificationId
@@ -70,6 +65,16 @@ class NotificationHelper(private val context: Context) {
         val notificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun initNotificationBuilder() {
+        notificationBuilder.apply {
+            setSmallIcon(R.drawable.ic_notifications_24dp)
+            setOnlyAlertOnce(true)
+            setProgress(PROGRESS_MAX, PROGRESS_INIT, false)
+            setContentIntent(getOpenActivityIntent())
+            priority = NotificationCompat.PRIORITY_DEFAULT
+        }
     }
 
     private fun getOpenActivityIntent(): PendingIntent {

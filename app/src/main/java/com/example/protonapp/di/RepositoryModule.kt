@@ -10,6 +10,7 @@ import com.example.protonapp.utils.WorkManagerUtils
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
+import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 
 val repositoryModule = Kodein.Module {
@@ -21,5 +22,5 @@ val repositoryModule = Kodein.Module {
     bind<WorkManagerUtils>() with singleton { WorkManagerUtils(instance()) }
 
     bind<FileUtils>() with singleton { FileUtils(instance()) }
-    bind<NotificationHelper>() with singleton { NotificationHelper(instance()) }
+    bind<NotificationHelper>() with provider { NotificationHelper(instance()) }
 }
