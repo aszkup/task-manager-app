@@ -54,8 +54,15 @@ class TaskListAdapter(
             itemView.setOnClickListener { clickListener(task) }
         }
 
-        private fun printDuration(duration: Duration): String =
-                "${duration.toHours()}h ${duration.toMinutes() % 60}m ${duration.seconds % 60}s"
+        private fun printDuration(duration: Duration): String {
+            val stringBuilder = StringBuilder()
+            val hours = duration.toHours()
+            hours.takeIf { it > 0 }?.apply { stringBuilder.append(hours).append("h ") }
+            val minutes = duration.toMinutes() % 60
+            minutes.takeIf { it > 0 }?.apply { stringBuilder.append(hours).append("m ") }
+            stringBuilder.append(duration.seconds % 60).append("s")
+            return stringBuilder.toString()
+        }
     }
 
     private class TaskDiffCallback : DiffUtil.ItemCallback<Task>() {
