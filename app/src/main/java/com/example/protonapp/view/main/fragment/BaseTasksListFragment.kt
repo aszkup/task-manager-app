@@ -50,12 +50,13 @@ abstract class BaseTasksListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupTaskList()
         swipeLayout.setOnRefreshListener { getTasks() }
+        setupSwipes()
         getTasks()
     }
 
-    open fun getTasks() {
-        viewModel.getFinishedTasks()
-    }
+    open fun getTasks() {}
+
+    open fun setupSwipes() {}
 
     protected fun getSwipeHandler(swipeDirection: Int, delay: Int = 0) =
             object : SwipeToStartTaskCallback(swipeDirection) {
