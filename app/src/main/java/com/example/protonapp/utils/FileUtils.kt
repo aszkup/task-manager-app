@@ -1,23 +1,27 @@
 package com.example.protonapp.utils
 
 import android.content.Context
-import android.database.Cursor
+import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
+import timber.log.Timber
 
 class FileUtils(private val context: Context) {
 
     fun getFileName(fileUri: Uri): String {
         if (fileUri.toString().startsWith(CONTENT_PREFIX)) {
-            var cursor: Cursor? = null
             try {
-                cursor = context.contentResolver.query(fileUri, null,
+                val takeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                context.contentResolver.takePersistableUriPermission(fileUri, takeFlags)
+                val cursor = context.contentResolver.query(fileUri, null, null,
                         null, null, null)
-                if (cursor != null && cursor.moveToFirst()) {
-                    return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                cursor?.use {
+                    if (it.moveToFirst()) {
+                        return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    }
                 }
-            } finally {
-                cursor?.close()
+            } catch (exception: Exception) {
+                Timber.e(exception)
             }
         } else {
             fileUri.lastPathSegment?.let {

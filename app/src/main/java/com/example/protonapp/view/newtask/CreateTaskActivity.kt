@@ -64,9 +64,13 @@ class CreateTaskActivity : BaseActivity() {
         if (resultCode != Activity.RESULT_OK) {
             return
         }
-        returnIntent?.data?.also { returnUri ->
-            uri = returnUri
-            viewModel.storeSelectedFileUri(returnUri)
+        returnIntent?.data?.also { returnedUri ->
+            val takeFlags = returnIntent.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            grantUriPermission(packageName, returnedUri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+            contentResolver.takePersistableUriPermission(returnedUri, takeFlags)
+            uri = returnedUri
+            viewModel.storeSelectedFileUri(returnedUri)
         }
     }
 
@@ -130,6 +134,9 @@ class CreateTaskActivity : BaseActivity() {
     private fun getFile() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             type = FILE_TYPE
+            addCategory(Intent.CATEGORY_OPENABLE)
+            flags = (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
         }
         startActivityForResult(intent, 0)
     }
