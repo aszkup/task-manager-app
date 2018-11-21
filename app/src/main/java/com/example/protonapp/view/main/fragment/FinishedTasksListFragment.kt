@@ -12,6 +12,8 @@ class FinishedTasksListFragment : BaseTasksListFragment() {
     override fun setupSwipes() {
         val leftSwipe = ItemTouchHelper(getSwipeHandler(ItemTouchHelper.LEFT))
         leftSwipe.attachToRecyclerView(recyclerView)
+        val rightSwipe = ItemTouchHelper(getSwipeHandler(ItemTouchHelper.RIGHT))
+        rightSwipe.attachToRecyclerView(recyclerView)
     }
 
     companion object {
