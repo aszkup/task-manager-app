@@ -57,8 +57,12 @@ class UploadFileWorker(
 
     override fun onStopped() {
         Timber.d("On Stopped")
-        dropBoxUploadUploader?.abort()
-        dropBoxUploadUploader?.close()
+        try {
+            dropBoxUploadUploader?.abort()
+            dropBoxUploadUploader?.close()
+        } catch (exception: Exception) {
+            Timber.e(exception)
+        }
         notificationId?.let { notificationHelper.markNotificationCanceled(it) }
         disposable?.dispose()
         task?.let { repository.cancelTask(it).subscribe({}, { Timber.e(it) }) }
