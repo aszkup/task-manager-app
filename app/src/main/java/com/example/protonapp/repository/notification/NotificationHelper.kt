@@ -52,6 +52,19 @@ class NotificationHelper(private val context: Context) {
             notificationBuilder.apply {
                 setContentText(context.getString(R.string.upload_completed))
                 setProgress(0, 0, false)
+                mActions.clear()
+                notify(notificationId, build())
+            }
+        }
+    }
+
+    fun markNotificationCanceled(notificationId: Int) {
+        notificationManager.apply {
+            notificationBuilder.apply {
+                setContentText(context.getString(R.string.upload_canceled))
+                setProgress(0, 0, false)
+                mActions.clear()
+                addAction(0, context.getString(R.string.new_task), getCreateTaskIntent())
                 notify(notificationId, build())
             }
         }

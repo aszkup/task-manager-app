@@ -8,6 +8,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.dropbox.core.util.IOUtil
 import com.dropbox.core.v2.DbxClientV2
+import com.dropbox.core.v2.files.UploadUploader
 import com.dropbox.core.v2.files.WriteMode
 import com.example.protonapp.ProtonApplication
 import com.example.protonapp.repository.notification.NotificationHelper
@@ -35,19 +36,28 @@ class UploadFileWorker(
     private val contentResolver: ContentResolver by instance()
     private val fileUtils: FileUtils by instance()
     private val notificationHelper: NotificationHelper by instance()
-    private var getTaskDisposable: Disposable? = null
+    private var disposable: Disposable? = null
     private var notificationId: Int? = null
+    private var dropBoxUploadUploader: UploadUploader? = null
 
     override fun doWork(): Result {
         Timber.i("Worker ${this::class.java.simpleName} started.")
         inputData.getString(TASK_ID)?.let { taskId ->
-            repository.getTask(taskId)
+            disposable = repository.getTask(taskId)
                     .doOnSuccess { Timber.d("Task to process $it") }
                     .map { sendFile(it) }
                     .subscribe({ }, { Timber.e(it) })
             return ListenableWorker.Result.SUCCESS
         }
         return ListenableWorker.Result.FAILURE
+    }
+
+    override fun onStopped() {
+        dropBoxUploadUploader?.abort()
+        dropBoxUploadUploader?.close()
+        notificationId?.let { notificationHelper.markNotificationCanceled(it) }
+        disposable?.dispose()
+        super.onStopped()
     }
 
     @Throws(FileNotFoundException::class, IOException::class)
@@ -61,9 +71,11 @@ class UploadFileWorker(
             Timber.i("File to upload: $fileName")
             repository.startTask(task).subscribe({ task = it }, { Timber.e(it) })
             notificationId = notificationHelper.createNotification(task.id, task.name, fileName)
-            dropboxClient.files().uploadBuilder(DROP_BOX_DESTINATION + fileName)
+            dropBoxUploadUploader = dropboxClient.files().uploadBuilder(DROP_BOX_DESTINATION + fileName)
                     .withMode(WriteMode.OVERWRITE)
-                    .uploadAndFinish(stream, getProgressListener(it.statSize))
+                    .start()
+            dropBoxUploadUploader?.uploadAndFinish(stream, getProgressListener(it.statSize))
+
             notificationId?.let { notificationHelper.markNotificationFinished(it) }
             Timber.i("Upload completed: $fileName")
             repository.finishTask(task).subscribe({ task = it }, { Timber.e(it) })
