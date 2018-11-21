@@ -59,7 +59,7 @@ class TaskListAdapter(
             val hours = duration.toHours()
             hours.takeIf { it > 0 }?.apply { stringBuilder.append(hours).append("h ") }
             val minutes = duration.toMinutes() % 60
-            minutes.takeIf { it > 0 }?.apply { stringBuilder.append(hours).append("m ") }
+            minutes.takeIf { it > 0 }?.apply { stringBuilder.append(minutes).append("m ") }
             stringBuilder.append(duration.seconds % 60).append("s")
             return stringBuilder.toString()
         }
