@@ -96,12 +96,12 @@ abstract class BaseTasksListFragment : BaseFragment() {
             workManagerUtils.isWorkRunning(selectedTask.id) ->
                 showToast(activity, R.string.cannot_edit_ongoing, GENERAL_ERROR)
             else -> {
-            }
-        }
-        context?.let { context ->
-            context.startActivity {
-                component = context.componentFor(CreateTaskActivity::class.java)
-                putExtra(CreateTaskActivity.TASK, selectedTask)
+                context?.let { context ->
+                    context.startActivity {
+                        component = context.componentFor(CreateTaskActivity::class.java)
+                        putExtra(CreateTaskActivity.TASK, selectedTask)
+                    }
+                }
             }
         }
     }
