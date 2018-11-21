@@ -54,6 +54,11 @@ class TaskRepository(
                     .map { task.copy(finishedAt = Instant.now()) }
                     .doOnSuccess { tasksDao.update(it) }
 
+    fun cancelTask(task: Task): Completable =
+            Completable.fromAction {
+                tasksDao.update(task.copy(scheduledAt = null, startedAt = null, finishedAt = null))
+            }
+
     fun remove(task: Task): Completable =
             Completable.fromAction {
                 tasksDao.delete(task)

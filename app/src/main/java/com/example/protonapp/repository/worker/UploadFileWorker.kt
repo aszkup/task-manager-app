@@ -39,12 +39,14 @@ class UploadFileWorker(
     private var disposable: Disposable? = null
     private var notificationId: Int? = null
     private var dropBoxUploadUploader: UploadUploader? = null
+    private var task: Task? = null
 
     override fun doWork(): Result {
         Timber.i("Worker ${this::class.java.simpleName} started.")
         inputData.getString(TASK_ID)?.let { taskId ->
             disposable = repository.getTask(taskId)
                     .doOnSuccess { Timber.d("Task to process $it") }
+                    .doOnSuccess { this.task = it }
                     .map { sendFile(it) }
                     .subscribe({ }, { Timber.e(it) })
             return ListenableWorker.Result.SUCCESS
@@ -53,11 +55,12 @@ class UploadFileWorker(
     }
 
     override fun onStopped() {
+        Timber.d("On Stopped")
         dropBoxUploadUploader?.abort()
         dropBoxUploadUploader?.close()
         notificationId?.let { notificationHelper.markNotificationCanceled(it) }
         disposable?.dispose()
-        super.onStopped()
+        task?.let { repository.cancelTask(it).subscribe({}, { Timber.e(it) }) }
     }
 
     @Throws(FileNotFoundException::class, IOException::class)
