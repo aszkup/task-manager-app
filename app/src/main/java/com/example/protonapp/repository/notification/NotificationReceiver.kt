@@ -10,7 +10,6 @@ import com.example.protonapp.ProtonApplication
 import com.example.protonapp.R
 import com.example.protonapp.repository.notification.NotificationHelper.Companion.TASK_ID
 import com.example.protonapp.repository.notification.NotificationHelper.Companion.TASK_NAME
-import com.example.protonapp.repository.task.TaskRepository
 import com.example.protonapp.view.newtask.CreateTaskActivity
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -21,7 +20,6 @@ class NotificationReceiver : BroadcastReceiver(), KodeinAware {
 
     override lateinit var kodein: Kodein
     private val workManager: WorkManager by instance()
-    private val repository: TaskRepository by instance()
     private lateinit var context: Context
 
     override fun onReceive(context: Context, intent: Intent?) {
@@ -30,7 +28,7 @@ class NotificationReceiver : BroadcastReceiver(), KodeinAware {
         intent?.let {
             when (intent.action) {
                 context.getString(R.string.cancel_task_action) -> onCancelIntent(intent)
-                context.getString(R.string.create_task_action) -> onCreateTaskIntent(intent)
+                context.getString(R.string.create_task_action) -> onCreateTaskIntent()
             }
         }
     }
@@ -43,7 +41,7 @@ class NotificationReceiver : BroadcastReceiver(), KodeinAware {
         }
     }
 
-    private fun onCreateTaskIntent(intent: Intent) {
+    private fun onCreateTaskIntent() {
         Timber.i("Create Task intent received")
         context.startActivity {
             component = context.componentFor(CreateTaskActivity::class.java)
