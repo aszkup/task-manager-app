@@ -40,6 +40,7 @@ class UploadFileWorker(
     private var notificationId: Int? = null
     private var dropBoxUploadUploader: UploadUploader? = null
     private var task: Task? = null
+    private var lastProgress = 0L
 
     override fun doWork(): Result {
         Timber.i("Worker ${this::class.java.simpleName} started.")
@@ -90,7 +91,10 @@ class UploadFileWorker(
             IOUtil.ProgressListener { uploadedBytes ->
                 val progress = uploadedBytes * 100 / fileSize
                 Timber.d("(Progress) Uploaded bytes: $uploadedBytes, percents: $progress")
-                notificationId?.let { notificationHelper.updateProgress(progress.toInt(), it) }
+                if (progress > lastProgress) {
+                    lastProgress = progress
+                    notificationId?.let { notificationHelper.updateProgress(progress.toInt(), it) }
+                }
             }
 
     companion object {
