@@ -3,7 +3,7 @@ package com.example.protonapp.view.main.swipecallback
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class SwipeToStartTaskCallback(swipeDirection: Int)
+abstract class SwipeCallback(swipeDirection: Int)
     : ItemTouchHelper.SimpleCallback(DRAG_DIRECTION, swipeDirection) {
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,

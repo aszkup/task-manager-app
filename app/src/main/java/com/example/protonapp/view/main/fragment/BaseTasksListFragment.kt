@@ -19,7 +19,7 @@ import com.example.protonapp.repository.task.Task
 import com.example.protonapp.utils.FileUtils
 import com.example.protonapp.utils.WorkManagerUtils
 import com.example.protonapp.view.main.TaskListAdapter
-import com.example.protonapp.view.main.swipecallback.SwipeToStartTaskCallback
+import com.example.protonapp.view.main.swipecallback.SwipeCallback
 import com.example.protonapp.view.newtask.CreateTaskActivity
 import com.example.protonapp.viewmodel.main.TasksViewModel
 import kotlinx.android.synthetic.main.fragmnet_task_list.*
@@ -59,7 +59,7 @@ abstract class BaseTasksListFragment : BaseFragment() {
     open fun setupSwipes() {}
 
     protected fun getSwipeHandler(swipeDirection: Int, delay: Int = 0) =
-            object : SwipeToStartTaskCallback(swipeDirection) {
+            object : SwipeCallback(swipeDirection) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     tasksAdapter.getItemAt(viewHolder.adapterPosition)?.let {
                         when {
