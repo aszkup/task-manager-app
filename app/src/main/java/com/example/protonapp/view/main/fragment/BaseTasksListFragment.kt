@@ -54,7 +54,7 @@ abstract class BaseTasksListFragment : BaseFragment() {
         getTasks()
     }
 
-    open fun getTasks() {}
+    abstract fun getTasks()
 
     open fun setupSwipes() {}
 

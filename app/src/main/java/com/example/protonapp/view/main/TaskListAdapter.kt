@@ -12,9 +12,8 @@ import com.example.protonapp.utils.FileUtils
 import com.example.protonapp.utils.WorkManagerUtils
 import org.threeten.bp.Duration
 
-
 /**
- * Task list adapter
+ * Task [PagedListAdapter]
  */
 class TaskListAdapter(
         private val fileUtils: FileUtils,
@@ -32,6 +31,11 @@ class TaskListAdapter(
         getItem(position)?.let { holder.bind(it) }
     }
 
+    /**
+     * Get item at position
+     * @param position [Int]
+     * @return task [Task]
+     */
     fun getItemAt(position: Int): Task? = getItem(position)
 
     inner class TaskViewHolder(

@@ -7,6 +7,9 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
+/**
+ * [ViewPager] with disabled page swipe listener
+ */
 class LockedViewPager : ViewPager {
 
     constructor(context: Context) : super(context)

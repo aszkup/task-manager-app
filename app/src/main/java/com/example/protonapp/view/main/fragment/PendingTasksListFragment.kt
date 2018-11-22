@@ -3,6 +3,9 @@ package com.example.protonapp.view.main.fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.fragmnet_task_list.*
 
+/**
+ * Pending Task List Fragment
+ */
 class PendingTasksListFragment : BaseTasksListFragment() {
 
     override fun getTasks() {

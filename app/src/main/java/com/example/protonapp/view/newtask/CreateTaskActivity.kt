@@ -26,6 +26,9 @@ import kotlinx.android.synthetic.main.activity_task_create.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.kodein.di.generic.instance
 
+/**
+ * Create Task [Activity]
+ */
 class CreateTaskActivity : BaseActivity() {
 
     private lateinit var viewModel: CreateTaskViewModel
