@@ -16,7 +16,7 @@ class WorkManagerUtils(private val workManager: WorkManager) {
         return isInState(tag, WorkInfo.State.RUNNING)
     }
 
-    fun startWorker(task: Task, delay: Int) {
+    fun startWorker(task: Task, delay: Int = 0) {
         val constraints = Constraints.Builder().apply {
             setRequiresCharging(false)
             setRequiredNetworkType(NetworkType.CONNECTED)

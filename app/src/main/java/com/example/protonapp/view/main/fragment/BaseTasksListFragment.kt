@@ -71,7 +71,13 @@ abstract class BaseTasksListFragment : BaseFragment() {
                                 onIsScheduledOrRunning(viewHolder.adapterPosition,
                                         R.string.already_ongoing)
                             }
-                            else -> viewModel.startTask(it, delay)
+                            else -> {
+                                if (delay == 0) {
+                                    viewModel.startTask(it)
+                                } else {
+                                    viewModel.scheduleTask(it, delay)
+                                }
+                            }
                         }
                     }
                 }

@@ -30,7 +30,13 @@ class TasksViewModel(
                 .addTo(disposables)
     }
 
-    fun startTask(task: Task, delay: Int) {
+    fun startTask(task: Task) {
+        Timber.i("Start task: `${task.name}`")
+        Timber.d("Start task: $task")
+        workManagerUtils.startWorker(task)
+    }
+
+    fun scheduleTask(task: Task, delay: Int) {
         Timber.i("Schedule task: `${task.name}` with delay: $delay")
         Timber.d("Schedule task: $task")
         taskRepository.scheduleTask(task)
