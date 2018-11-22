@@ -16,7 +16,7 @@ buildscript {
 }
 
 plugins {
-    id("io.gitlab.arturbosch.detekt").version("1.0.0.RC9.2")
+    id("io.gitlab.arturbosch.detekt").version("1.0.0-RC11")
 }
 
 allprojects {
@@ -32,7 +32,7 @@ task clean(type: Delete) {
 }
 
 detekt {
-    toolVersion = "1.0.0.RC9.2"
+    toolVersion = "1.0.0-RC11"
     input = files("app/src/main/java")
     filters = ".*/resources/.*,.*/build/.*"
     config = files("default-detekt-config.yml")
