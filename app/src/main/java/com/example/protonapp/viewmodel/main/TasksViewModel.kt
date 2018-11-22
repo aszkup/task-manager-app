@@ -2,19 +2,16 @@ package com.example.protonapp.viewmodel.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
-import androidx.work.*
 import com.android.base.viewmodel.BaseViewModel
 import com.example.protonapp.repository.task.Task
 import com.example.protonapp.repository.task.TaskRepository
-import com.example.protonapp.repository.worker.UploadFileWorker
-import com.example.protonapp.repository.worker.UploadFileWorker.Companion.TASK_ID
+import com.example.protonapp.utils.WorkManagerUtils
 import io.reactivex.rxkotlin.addTo
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
 class TasksViewModel(
         private val taskRepository: TaskRepository,
-        private val workManager: WorkManager
+        private val workManagerUtils: WorkManagerUtils
 ) : BaseViewModel() {
 
     val viewState: MutableLiveData<PagedList<Task>> = MutableLiveData()
@@ -37,22 +34,7 @@ class TasksViewModel(
         Timber.i("Schedule task: `${task.name}` with delay: $delay")
         Timber.d("Schedule task: $task")
         taskRepository.scheduleTask(task)
-                .subscribe({ startWorker(task, delay) }, { Timber.e(it) })
+                .subscribe({ workManagerUtils.startWorker(task, delay) }, { Timber.e(it) })
                 .addTo(disposables)
-    }
-
-    private fun startWorker(task: Task, delay: Int) {
-        val constraints = Constraints.Builder().apply {
-            setRequiresCharging(false)
-            setRequiredNetworkType(NetworkType.CONNECTED)
-        }.build()
-        val data = Data.Builder().apply { putString(TASK_ID, task.id) }.build()
-        val work = OneTimeWorkRequest.Builder(UploadFileWorker::class.java).apply {
-            setInitialDelay(delay.toLong(), TimeUnit.SECONDS)
-            setConstraints(constraints)
-            setInputData(data)
-            addTag(task.id)
-        }.build()
-        workManager.enqueue(work)
     }
 }
