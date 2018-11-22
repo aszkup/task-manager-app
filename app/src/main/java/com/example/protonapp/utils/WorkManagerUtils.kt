@@ -4,6 +4,7 @@ import androidx.work.*
 import com.example.protonapp.repository.task.Task
 import com.example.protonapp.repository.worker.UploadFileWorker
 import timber.log.Timber
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
 class WorkManagerUtils(private val workManager: WorkManager) {
@@ -40,7 +41,10 @@ class WorkManagerUtils(private val workManager: WorkManager) {
                 }
             }
             false
-        } catch (exception: Exception) {
+        } catch (exception: ExecutionException) {
+            Timber.w(exception)
+            false
+        } catch (exception: InterruptedException) {
             Timber.w(exception)
             false
         }

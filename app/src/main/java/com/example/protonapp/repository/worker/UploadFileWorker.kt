@@ -93,7 +93,7 @@ class UploadFileWorker(
 
     private fun getProgressListener(fileSize: Long) =
             IOUtil.ProgressListener { uploadedBytes ->
-                val progress = uploadedBytes * 100 / fileSize
+                val progress = uploadedBytes * TOTAL_PERCENT / fileSize
                 Timber.d("(Progress) Uploaded bytes: $uploadedBytes, percents: $progress")
                 if (progress > lastProgress) {
                     lastProgress = progress
@@ -105,5 +105,6 @@ class UploadFileWorker(
         const val TASK_ID = "task_id"
         const val DROP_BOX_DESTINATION = "/Proton Files/"
         const val READ_MODE = "r"
+        const val TOTAL_PERCENT = 100
     }
 }

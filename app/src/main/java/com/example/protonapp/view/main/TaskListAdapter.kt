@@ -62,9 +62,9 @@ class TaskListAdapter(
             val stringBuilder = StringBuilder()
             val hours = duration.toHours()
             hours.takeIf { it > 0 }?.apply { stringBuilder.append(hours).append("h ") }
-            val minutes = duration.toMinutes() % 60
+            val minutes = duration.toMinutes() % SEC_IN_MINUTES
             minutes.takeIf { it > 0 }?.apply { stringBuilder.append(minutes).append("m ") }
-            stringBuilder.append(duration.seconds % 60).append("s")
+            stringBuilder.append(duration.seconds % SEC_IN_MINUTES).append("s")
             return stringBuilder.toString()
         }
     }
@@ -78,5 +78,9 @@ class TaskListAdapter(
         override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
             return oldItem == newItem
         }
+    }
+
+    companion object {
+        const val SEC_IN_MINUTES = 60
     }
 }
