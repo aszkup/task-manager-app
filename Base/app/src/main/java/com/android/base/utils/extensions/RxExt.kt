@@ -1,9 +1,6 @@
 package com.android.base.utils.extensions
 
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -32,5 +29,9 @@ fun <T> Maybe<T>.applyIoSchedulers(): Maybe<T> =
  * Apply Io Schedulers
  */
 fun Completable.applyIoSchedulers(): Completable =
+        subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+
+fun <T> Flowable<T>.applyIoSchedulers(): Flowable<T> =
         subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())

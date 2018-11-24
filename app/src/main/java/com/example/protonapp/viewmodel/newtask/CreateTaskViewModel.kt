@@ -6,6 +6,7 @@ import com.android.base.model.InProgress
 import com.android.base.model.OperationError
 import com.android.base.model.ViewState
 import com.android.base.utils.BaseMessage
+import com.android.base.utils.extensions.applyIoSchedulers
 import com.android.base.viewmodel.BaseViewModel
 import com.example.protonapp.R
 import com.example.protonapp.model.CreateTaskViewState
@@ -34,6 +35,7 @@ class CreateTaskViewModel(
         this.task = task
         Timber.d("Create task: ${this.task}")
         taskRepository.store(task.copy(fileUri = uri.toString()))
+                .applyIoSchedulers()
                 .doOnSubscribe { viewState.value = ViewState(status = InProgress()) }
                 .subscribe(::onTaskAdded, ::onInsertError)
                 .addTo(disposables)
@@ -43,6 +45,7 @@ class CreateTaskViewModel(
         this.task = task.copy(id = this.task!!.id, fileUri = uri.toString())
         Timber.d("Update task: ${this.task}")
         taskRepository.store(this.task!!)
+                .applyIoSchedulers()
                 .doOnSubscribe { viewState.value = ViewState(status = InProgress()) }
                 .subscribe(::onTaskAdded, ::onInsertError)
                 .addTo(disposables)

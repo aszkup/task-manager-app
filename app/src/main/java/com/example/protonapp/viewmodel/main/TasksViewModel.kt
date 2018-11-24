@@ -3,6 +3,7 @@ package com.example.protonapp.viewmodel.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
+import com.android.base.utils.extensions.applyIoSchedulers
 import com.android.base.viewmodel.BaseViewModel
 import com.example.protonapp.repository.task.Task
 import com.example.protonapp.repository.task.TaskRepository
@@ -26,6 +27,7 @@ class TasksViewModel(
     fun getPendingTasks() {
         Timber.i("Get pending tasks")
         taskRepository.getPendingTasksPaged()
+                .applyIoSchedulers()
                 .subscribe({ viewState.value = it }, { Timber.e(it) })
                 .addTo(disposables)
     }
@@ -36,6 +38,7 @@ class TasksViewModel(
     fun getFinishedTasks() {
         Timber.i("Get finished tasks")
         taskRepository.getFinishedTasksPaged()
+                .applyIoSchedulers()
                 .subscribe({ viewState.value = it }, { Timber.e(it) })
                 .addTo(disposables)
     }
@@ -59,6 +62,7 @@ class TasksViewModel(
         Timber.i("Schedule task: `${task.name}` with delay: $delay")
         Timber.d("Schedule task: $task")
         taskRepository.scheduleTask(task)
+                .applyIoSchedulers()
                 .subscribe({ workManagerUtils.startWorker(task, delay) }, { Timber.e(it) })
                 .addTo(disposables)
     }
