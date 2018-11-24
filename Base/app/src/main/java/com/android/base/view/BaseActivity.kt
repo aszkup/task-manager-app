@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.android.base.BaseApplication
 import com.android.base.model.*
+import com.android.base.utils.BaseMessage
 import com.android.base.utils.enums.GENERAL_ERROR
+import com.android.base.utils.enums.GENERAL_MESSAGE
+import com.android.base.utils.enums.MessageType
 import com.android.base.utils.extensions.lifeCycleDebug
 import com.android.base.utils.extensions.showToast
 import com.android.base.view.login.BaseAuthActivity
@@ -125,11 +128,15 @@ abstract class BaseActivity : AppCompatActivity(), KodeinAware {
     }
 
     protected fun showErrorMessage(operationError: OperationError) {
-        operationError.message.messageId?.let {
-            showToast(this, it, GENERAL_ERROR)
+        showMessage(operationError.message, GENERAL_ERROR)
+    }
+
+    protected fun showMessage(message: BaseMessage, @MessageType messageType: Int = GENERAL_MESSAGE) {
+        message.messageId?.let {
+            showToast(this, it, messageType)
         }
-        operationError.message.message?.let {
-            showToast(this, it, GENERAL_ERROR)
+        message.message?.let {
+            showToast(this, it, messageType)
         }
     }
 }
