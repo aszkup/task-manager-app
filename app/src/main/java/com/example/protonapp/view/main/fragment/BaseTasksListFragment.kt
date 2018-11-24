@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.android.base.utils.enums.GENERAL_ERROR
 import com.android.base.utils.enums.GENERAL_MESSAGE
 import com.android.base.utils.extensions.componentFor
@@ -19,7 +18,7 @@ import com.example.protonapp.repository.task.Task
 import com.example.protonapp.utils.FileUtils
 import com.example.protonapp.utils.WorkManagerUtils
 import com.example.protonapp.view.main.TaskListAdapter
-import com.example.protonapp.view.main.swipecallback.SwipeCallback
+import com.example.protonapp.view.main.swipecallback.TaskSwipeCallback
 import com.example.protonapp.view.newtask.CreateTaskActivity
 import com.example.protonapp.viewmodel.main.TasksViewModel
 import kotlinx.android.synthetic.main.fragmnet_task_list.*
@@ -59,32 +58,17 @@ abstract class BaseTasksListFragment : BaseFragment() {
     open fun setupSwipes() {}
 
     protected fun getSwipeHandler(swipeDirection: Int, delay: Int = 0) =
-            object : SwipeCallback(swipeDirection) {
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    tasksAdapter.getItemAt(viewHolder.adapterPosition)?.let {
-                        when {
-                            workManagerUtils.isWorkScheduled(it.id) -> {
-                                onIsScheduledOrRunning(viewHolder.adapterPosition,
-                                        R.string.already_scheduled)
-                            }
-                            workManagerUtils.isWorkRunning(it.id) -> {
-                                onIsScheduledOrRunning(viewHolder.adapterPosition,
-                                        R.string.already_ongoing)
-                            }
-                            else -> {
-                                if (delay == 0) {
-                                    viewModel.startTask(it)
-                                } else {
-                                    viewModel.scheduleTask(it, delay)
-                                }
-                            }
+            TaskSwipeCallback(swipeDirection) { adapterPosition ->
+                tasksAdapter.getItemAt(adapterPosition)?.let {
+                    when {
+                        workManagerUtils.isWorkScheduled(it.id) -> {
+                            onIsScheduledOrRunning(adapterPosition, R.string.already_scheduled)
                         }
+                        workManagerUtils.isWorkRunning(it.id) -> {
+                            onIsScheduledOrRunning(adapterPosition, R.string.already_ongoing)
+                        }
+                        else -> if (delay == 0) viewModel.startTask(it) else viewModel.scheduleTask(it, delay)
                     }
-                }
-
-                private fun onIsScheduledOrRunning(adapterPosition: Int, stringId: Int) {
-                    tasksAdapter.notifyItemChanged(adapterPosition)
-                    showToast(activity, stringId, GENERAL_MESSAGE)
                 }
             }
 
@@ -96,19 +80,26 @@ abstract class BaseTasksListFragment : BaseFragment() {
         recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
+    private fun onIsScheduledOrRunning(adapterPosition: Int, stringId: Int) {
+        tasksAdapter.notifyItemChanged(adapterPosition)
+        showToast(activity, stringId, GENERAL_MESSAGE)
+    }
+
     private fun onTaskSelected(selectedTask: Task) {
         when {
             workManagerUtils.isWorkScheduled(selectedTask.id) ->
                 showToast(activity, R.string.cannot_edit_scheduled, GENERAL_ERROR)
             workManagerUtils.isWorkRunning(selectedTask.id) ->
                 showToast(activity, R.string.cannot_edit_ongoing, GENERAL_ERROR)
-            else -> {
-                context?.let { context ->
-                    context.startActivity {
-                        component = context.componentFor(CreateTaskActivity::class.java)
-                        putExtra(CreateTaskActivity.TASK, selectedTask)
-                    }
-                }
+            else -> startCreateTaskActivity(selectedTask)
+        }
+    }
+
+    private fun startCreateTaskActivity(selectedTask: Task) {
+        context?.let {
+            it.startActivity {
+                component = it.componentFor(CreateTaskActivity::class.java)
+                putExtra(CreateTaskActivity.TASK, selectedTask)
             }
         }
     }
