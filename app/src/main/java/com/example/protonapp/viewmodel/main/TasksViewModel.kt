@@ -50,7 +50,7 @@ class TasksViewModel(
     fun startTask(task: Task) {
         Timber.i("Start task: `${task.name}`")
         Timber.d("Start task: $task")
-        workManagerUtils.startWorker(task)
+        workManagerUtils.startWorker(task.id)
     }
 
     /**
@@ -63,7 +63,7 @@ class TasksViewModel(
         Timber.d("Schedule task: $task")
         taskRepository.scheduleTask(task)
                 .applyIoSchedulers()
-                .subscribe({ workManagerUtils.startWorker(task, delay) }, { Timber.e(it) })
+                .subscribe({ workManagerUtils.startWorker(task.id, delay) }, { Timber.e(it) })
                 .addTo(disposables)
     }
 }

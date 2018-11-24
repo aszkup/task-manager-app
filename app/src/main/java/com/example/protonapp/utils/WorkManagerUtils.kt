@@ -1,7 +1,6 @@
 package com.example.protonapp.utils
 
 import androidx.work.*
-import com.example.protonapp.repository.task.Task
 import com.example.protonapp.repository.worker.UploadFileWorker
 import timber.log.Timber
 import java.util.concurrent.ExecutionException
@@ -17,17 +16,17 @@ class WorkManagerUtils(private val workManager: WorkManager) {
         return isInState(tag, WorkInfo.State.RUNNING)
     }
 
-    fun startWorker(task: Task, delay: Int = 0) {
+    fun startWorker(tag: String, delay: Int = 0) {
         val constraints = Constraints.Builder().apply {
             setRequiresCharging(false)
             setRequiredNetworkType(NetworkType.CONNECTED)
         }.build()
-        val data = Data.Builder().apply { putString(UploadFileWorker.TASK_ID, task.id) }.build()
+        val data = Data.Builder().apply { putString(WORK_REQUEST_TAG, tag) }.build()
         val work = OneTimeWorkRequest.Builder(UploadFileWorker::class.java).apply {
             setInitialDelay(delay.toLong(), TimeUnit.SECONDS)
             setConstraints(constraints)
             setInputData(data)
-            addTag(task.id)
+            addTag(tag)
         }.build()
         workManager.enqueue(work)
     }
@@ -48,5 +47,9 @@ class WorkManagerUtils(private val workManager: WorkManager) {
             Timber.w(exception)
             false
         }
+    }
+
+    companion object {
+        const val WORK_REQUEST_TAG = "work_request_tag"
     }
 }

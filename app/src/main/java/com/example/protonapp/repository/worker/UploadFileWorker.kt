@@ -15,6 +15,7 @@ import com.example.protonapp.repository.notification.NotificationHelper
 import com.example.protonapp.repository.task.Task
 import com.example.protonapp.repository.task.TaskRepository
 import com.example.protonapp.utils.FileUtils
+import com.example.protonapp.utils.WorkManagerUtils.Companion.WORK_REQUEST_TAG
 import io.reactivex.disposables.Disposable
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
@@ -44,7 +45,7 @@ class UploadFileWorker(
 
     override fun doWork(): Result {
         Timber.i("Worker ${this::class.java.simpleName} started.")
-        inputData.getString(TASK_ID)?.let { taskId ->
+        inputData.getString(WORK_REQUEST_TAG)?.let { taskId ->
             disposable = repository.getTask(taskId)
                     .doOnSuccess { Timber.d("Task to process $it") }
                     .doOnSuccess { this.task = it }
@@ -102,7 +103,6 @@ class UploadFileWorker(
             }
 
     companion object {
-        const val TASK_ID = "task_id"
         const val DROP_BOX_DESTINATION = "/Proton Files/"
         const val READ_MODE = "r"
         const val TOTAL_PERCENT = 100
