@@ -2,10 +2,9 @@ package com.example.protonapp.viewmodel.newtask
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import com.android.base.model.InProgress
-import com.android.base.model.OperationError
-import com.android.base.model.ViewState
+import com.android.base.model.*
 import com.android.base.utils.BaseMessage
+import com.android.base.utils.Event
 import com.android.base.utils.extensions.applyIoSchedulers
 import com.android.base.viewmodel.BaseViewModel
 import com.example.protonapp.R
@@ -22,7 +21,8 @@ class CreateTaskViewModel(
     private var task: Task? = null
     private var uri: Uri? = null
 
-    val viewState: MutableLiveData<ViewState<CreateTaskViewState>> = MutableLiveData()
+    val taskStoredStatus = MutableLiveData<Event<OperationStatus>>()
+    val viewState = MutableLiveData<ViewState<CreateTaskViewState>>()
 
     fun init(task: Task) {
         Timber.d("Init with task: $task")
@@ -32,7 +32,6 @@ class CreateTaskViewModel(
     }
 
     fun createTask(task: Task) {
-        this.task = task
         Timber.d("Create task: ${this.task}")
         taskRepository.store(task.copy(fileUri = uri.toString()))
                 .applyIoSchedulers()
@@ -58,13 +57,18 @@ class CreateTaskViewModel(
 
     private fun onTaskAdded() {
         Timber.i("Task stored: ${task?.name}")
-        viewState.postValue(ViewState(CreateTaskViewState(task, uri, taskStored = true)))
+        viewState.postValue(ViewState(CreateTaskViewState(task, uri)))
+        if (task == null) {
+            taskStoredStatus.postValue(Event(Success(BaseMessage(R.string.task_stored))))
+        } else {
+            taskStoredStatus.postValue(Event(Success(BaseMessage(R.string.task_updated))))
+        }
     }
 
     private fun onInsertError(throwable: Throwable) {
         Timber.w("Insertion error: $task")
         Timber.w(throwable)
-        viewState.postValue(ViewState(CreateTaskViewState(task, uri, taskStored = false),
-                status = OperationError(BaseMessage(R.string.create_task_failed))))
+        viewState.postValue(ViewState(CreateTaskViewState(task, uri)))
+        taskStoredStatus.postValue(Event(OperationError(BaseMessage(R.string.create_task_failed))))
     }
 }

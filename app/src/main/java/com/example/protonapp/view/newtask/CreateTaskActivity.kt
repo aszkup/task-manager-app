@@ -7,6 +7,10 @@ import android.os.Bundle
 import androidx.annotation.Nullable
 import androidx.lifecycle.Observer
 import com.android.base.model.OperationError
+import com.android.base.model.OperationStatus
+import com.android.base.model.Success
+import com.android.base.utils.BaseMessage
+import com.android.base.utils.Event
 import com.android.base.utils.enums.GENERAL_MESSAGE
 import com.android.base.utils.extensions.hideSoftKeyboard
 import com.android.base.utils.extensions.showToast
@@ -51,7 +55,9 @@ class CreateTaskActivity : BaseActivity() {
         viewModel.viewState.observe(this, Observer {
             viewStateUpdated(it, ::onNewState, showError = ::showError)
         })
-
+        viewModel.taskStoredStatus.observe(this, Observer {
+            onStoredStatus(it)
+        })
         task?.let { initWithTask(it) }
 
         rootLayout.setOnClickListener { hideSoftKeyboard(); it.requestFocus() }
@@ -61,6 +67,19 @@ class CreateTaskActivity : BaseActivity() {
             addChipTerminator(',', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
         }
         setupButtons()
+    }
+
+    private fun onStoredStatus(event: Event<OperationStatus>) {
+        val content = event.getContentIfNotHandled()
+        when (content) {
+            is Success<*> -> {
+                showMessage(content.data as BaseMessage)
+                finish()
+            }
+            is OperationError -> {
+                showMessage(content.message)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, returnIntent: Intent?) {
@@ -89,18 +108,6 @@ class CreateTaskActivity : BaseActivity() {
     }
 
     private fun onNewState(viewState: CreateTaskViewState) {
-        viewState.taskStored?.let { isStored ->
-            if (isStored) {
-                task?.let {
-                    showToast(application, getString(R.string.task_updated), GENERAL_MESSAGE)
-                    finish()
-                    return
-                }
-                showToast(application, getString(R.string.task_stored), GENERAL_MESSAGE)
-                finish()
-                return
-            }
-        }
         viewState.task?.let {
             nameInput.setText(it.name)
             descriptionInput.setText(it.description)
