@@ -2,18 +2,17 @@ package com.example.protonapp.repository.task
 
 import androidx.paging.DataSource
 import androidx.room.*
-import io.reactivex.Flowable
-import io.reactivex.Maybe
+import io.reactivex.Single
 
 
 @Dao
 interface TaskDao {
 
     @Query("SELECT * FROM tasks WHERE taskid is :id")
-    fun taskWithId(id: String): Maybe<Task>
+    fun taskWithId(id: String): Single<Task>
 
     @Query("SELECT * FROM tasks")
-    fun tasks(): Flowable<Task>
+    fun tasks(): Single<List<Task>>
 
     @Query("SELECT * FROM tasks ORDER BY startedAt DESC, createdAt DESC")
     fun tasksPaged(): DataSource.Factory<Int, Task>
