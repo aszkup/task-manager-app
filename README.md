@@ -2,8 +2,8 @@
 Simple application to create, schedule and run tasks used for uploading files to Dropbox storage.
 
 ## Demo
-|<img src="./screens/Screenshot_1.png" width="260">|<img src="./screens/Screenshot_2.png" width="260">|<img src="./screens/Screenshot_3.png" width="260">|
-|<img src="./screens/Screenshot_4.png" width="260">|<img src="./screens/Screenshot_5.png" width="260">|
+|<img src="./screens/Screenshot_1.png" width="260"><img src="./screens/Screenshot_2.png" width="260"><img src="./screens/Screenshot_3.png" width="260">
+|<img src="./screens/Screenshot_4.png" width="260"><img src="./screens/Screenshot_5.png" width="260">
 
 ### Google components used in project
 * [ViewModel][10]
