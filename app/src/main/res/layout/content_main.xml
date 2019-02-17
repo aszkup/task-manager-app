@@ -17,7 +17,7 @@
         app:tabRippleColor="@color/white"
         app:tabTextColor="@color/white" />
 
-    <com.example.protonapp.view.main.pageadapter.LockedViewPager
+    <com.example.taskmanagerapp.view.main.pageadapter.LockedViewPager
         android:id="@+id/viewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"

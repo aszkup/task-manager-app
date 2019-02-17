@@ -11,7 +11,7 @@
 
         <variable
             name="task"
-            type="com.example.protonapp.repository.task.Task" />
+            type="com.example.taskmanagerapp.repository.task.Task" />
 
         <variable
             name="fileName"
